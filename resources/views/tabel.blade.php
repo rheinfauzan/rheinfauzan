@@ -221,14 +221,16 @@
       "info": true,
       "autoWidth": true,
       "responsive": true,
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    
+    });
     $('#simpanData').on('click', function () {
-        .row.add([$('#namaSiswa').val(), $('kelasSiswa').val(), $('nimSiswa').val()]).draw(false);
+        t.row.add([$('#namaSiswa').val(), $('#kelasSiswa').val(), $('#nimSiswa').val(), '<td class="text-center"><button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#editData" title="Edit"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData" title="Delete"><i class="fas fa-trash"></i></button></td>'])
+                    .draw(false);
+
+      $('#tambahData').modal('hide')
     });
  
     // Automatically add a first row of data
-    $('#simpanData').click();
+    // $('#simpanData').click();
 })
 </script>
 @endpush
