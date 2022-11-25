@@ -17,5 +17,6 @@ use Illuminate\Support\Facades\Route;
 //     return view('profile');
 // });
 
-Route::get('/profile', [App\Http\Controllers\ControllerSatu::class, 'profile'])->name('profile');
+Route::get('/', [App\Http\Controllers\ControllerSatu::class, 'index'])->name('profile');
+
 Route::get('/tabel', [App\Http\Controllers\ControllerSatu::class, 'tabel'])->name('tabel');

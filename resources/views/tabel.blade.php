@@ -26,60 +26,50 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">DataTable with minimal features & hover style</h3>
+                <h3 class="card-title">Latihan</h3>
               </div>
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">DataTable with default features</h3>
-              </div>
+               
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+              <button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#tambahData">Tambah</button>
+               <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
+                    <th>Nama</th>
+                    <th>Kelas</th>
+                    <th>NIM</th>
                     <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
                   <tr class="list-inline m-0">
-                    <td>Trident</td>
-                    <td>Chrome
-                    </td>
-                    <td>Win 95+</td>
+                    <td>Adit</td>
+                    <td>11</td>
                     <td> 4</td>
                     <td class="text-center"> 
-                      <button class="btn btn-success btn-sm list-inline-item " type="button" data-toggle="modal" data-placement="top" data-target="#exampleModal" title="Edit">Edit</button>
-                      <button class="btn btn-danger btn-sm list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#exampleModal" title="Delete">Hapus</button>
+                      <button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#editData" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="btn btn-danger btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData" title="Delete"><i class="fas fa-trash"></i></button>
                     </td>
                   </tr>
                   <tr class="list-inline m-0">
-                    <td>Trident</td>
-                    <td>Firefox
-                    </td>
-                    <td>Win 95+</td>
+                    <td>Adit</td>
+                    <td>11</td>
                     <td> 4</td>
-                    <td class="text-center">
-                      <button class="btn btn-success btn-sm list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#exampleModal" title="Edit">Edit</button>
-                      <button class="btn btn-danger btn-sm list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#exampleModal" title="Delete">Hapus</button>
+                    <td class="text-center"> 
+                      <button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#editData" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="btn btn-danger btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData" title="Delete"><i class="fas fa-trash"></i></button>
                     </td>
                   </tr>
                   <tr class="list-inline m-0">
-                    <td>Zero</td>
-                    <td>Internet
-                      Explorer 4.0
-                    </td>
-                    <td>Win 95+</td>
+                    <td>Adit</td>
+                    <td>11</td>
                     <td> 4</td>
-                    <td class="text-center">
-                      <button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#exampleModal" title="Edit"><i class="fas fa-edit"></i></button>
-                      <button class="btn btn-danger btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#exampleModal" title="Delete"><i class="fas fa-trash"></i></button>
+                    <td class="text-center"> 
+                      <button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#editData" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="btn btn-danger btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData" title="Delete"><i class="fas fa-trash"></i></button>
                     </td>
                   </tr>
-                  </tbody>
+                </tbody>
                   {{-- <tfoot>
                   <tr>
                     <th>Rendering engine</th>
@@ -103,8 +93,99 @@
     </section>
     <!-- /.content -->
   </div>
-  @include('layouts.modal') 
+  {{-- Modal tambah --}}
+  <div class="modal fade" id="tambahData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Tambah</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {{-- form --}}
+          <form id="formTambah">
+            <div class="form-grub">
+              <label for="namaSiswa">Nama</label>
+              <input type="text" id="namaSiswa" class="form-control" placeholder="Nama" value="Fauzan">
+            </div>
+          <div class="form-grub">
+            <label for="namaSiswa">Kelas</label>
+            <input type="text" id="kelasSiswa" class="form-control" placeholder="Kelas" value="12">
+          </div>
+        <div class="form-grub">
+          <label for="namaSiswa">NIM</label>
+          <input type="text" id="nimSiswa" class="form-control" placeholder="NIM" value="2022">
+        </div>
+      </form>
+          {{-- .form --}}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="simpanData">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{-- end Modal tambah --}}
 
+  {{-- Modal edit --}}
+  <div class="modal fade" id="editData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {{-- form --}}
+          <form>
+            <div class="form-grub">
+              <label for="namaSiswa">Nama</label>
+              <input type="text" id="editNama" class="form-control" placeholder="Nama">
+            </div>
+          </form>
+          <div class="form-grub">
+            <label for="namaSiswa">Kelas</label>
+            <input type="text" id="editKelas" class="form-control" placeholder="Siswa">
+          </div>
+        </form>
+        <div class="form-grub">
+          <label for="namaSiswa">NIM</label>
+          <input type="text" id="editNim" class="form-control" placeholder="Nama">
+        </div>
+      </form>
+          {{-- .form --}}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{-- end modal edit --}}
+
+{{-- Modal hapus --}}
+<div class="modal fade" id="hapusData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Hapus</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{-- end Modal hapus --}}
 @endsection
 @push('styles')
   <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -131,22 +212,23 @@
 
 @push('scripts')
 <script>
-    $(function () {
-    $("#example1").DataTable({
-      "responsive": true, 
-      "lengthChange": false, 
-      "autoWidth": false, 
-      "ordering": true,
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
+  $(document).ready(function () {
+    var t = $("#example1").DataTable({
       "paging": true,
       "lengthChange": false,
       "searching": false,
       "ordering": true,
       "info": true,
-      "autoWidth": false,
+      "autoWidth": true,
       "responsive": true,
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    
+    $('#simpanData').on('click', function () {
+        .row.add([$('#namaSiswa').val(), $('kelasSiswa').val(), $('nimSiswa').val()]).draw(false);
     });
-  });
+ 
+    // Automatically add a first row of data
+    $('#simpanData').click();
+})
 </script>
 @endpush
