@@ -31,54 +31,18 @@
                
               <!-- /.card-header -->
               <div class="card-body">
-              <button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#tambahData">Tambah</button>
-               <table id="example1" class="table table-bordered table-striped">
+              <button class="btn btn-success btn-sm list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#tambahData">Tambah</button>
+               <table id="example1" class="table table-bordered table-striped" width="100%">
                   <thead>
-                  <tr>
-                    <th>Nama</th>
-                    <th>Kelas</th>
-                    <th>NIM</th>
-                    <th>Action</th>
-                  </tr>
+                    <tr>
+                      <th width="30%" class="text-center">Nama</th>
+                      <th width="20%" class="text-center">Kelas</th>
+                      <th width="30" class="text-center">NIM</th>
+                      <th width="20%" class="text-left">Action</th>
+                    </tr>
                   </thead>
                   <tbody>
-                  <tr class="list-inline m-0">
-                    <td>Adit</td>
-                    <td>11</td>
-                    <td> 4</td>
-                    <td class="text-center"> 
-                      <button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#editData" title="Edit"><i class="fas fa-edit"></i></button>
-                      <button class="btn btn-danger btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData" title="Delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                  </tr>
-                  <tr class="list-inline m-0">
-                    <td>Adit</td>
-                    <td>11</td>
-                    <td> 4</td>
-                    <td class="text-center"> 
-                      <button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#editData" title="Edit"><i class="fas fa-edit"></i></button>
-                      <button class="btn btn-danger btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData" title="Delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                  </tr>
-                  <tr class="list-inline m-0">
-                    <td>Adit</td>
-                    <td>11</td>
-                    <td> 4</td>
-                    <td class="text-center"> 
-                      <button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#editData" title="Edit"><i class="fas fa-edit"></i></button>
-                      <button class="btn btn-danger btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData" title="Delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                  </tr>
-                </tbody>
-                  {{-- <tfoot>
-                  <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
-                  </tr>
-                  </tfoot> --}}
+                  </tbody>
                 </table>
               </div>
               <!-- /.card-body -->
@@ -108,15 +72,15 @@
           <form id="formTambah">
             <div class="form-grub">
               <label for="namaSiswa">Nama</label>
-              <input type="text" id="namaSiswa" class="form-control" placeholder="Nama" value="Fauzan">
+              <input type="text" id="tambahNama" name="nama" class="form-control" placeholder="Nama">
             </div>
           <div class="form-grub">
             <label for="namaSiswa">Kelas</label>
-            <input type="text" id="kelasSiswa" class="form-control" placeholder="Kelas" value="12">
+            <input type="text" id="tambahKelas" name="kelas" class="form-control" placeholder="Kelas">
           </div>
         <div class="form-grub">
           <label for="namaSiswa">NIM</label>
-          <input type="text" id="nimSiswa" class="form-control" placeholder="NIM" value="2022">
+          <input type="text" id="tambahNim" name="nim" class="form-control" placeholder="NIM">
         </div>
       </form>
           {{-- .form --}}
@@ -174,6 +138,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
+        <h2>Apakah anda yakin?</h2>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -221,13 +186,63 @@
       "info": true,
       "autoWidth": true,
       "responsive": true,
+      "processing": true,
+                "serverSide": true,
+                "ajax": {url:"/gettabel"},
+                "columns": [
+                    { "data": "nama_kelas" },
+                    { "data": "kelas" },
+                    { "data": "nim_kelas" },
+                    { "data": "action" },                   
+                ],
+    "columnDefs": [
+      { className: "text-center", "targets": [ 3 ] }
+  ]
     });
-    $('#simpanData').on('click', function () {
-        t.row.add([$('#namaSiswa').val(), $('#kelasSiswa').val(), $('#nimSiswa').val(), '<td class="text-center"><button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#editData" title="Edit"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData" title="Delete"><i class="fas fa-trash"></i></button></td>'])
-                    .draw(false);
+   // add 
+        //action create post
+        $('#simpanData').click(function(e) {
+            e.preventDefault();
+    
+            //define variable
+            let nama   = $('#tambahNama').val();
+            let kelas = $('#tambahKelas').val();
+            let nim   = $('#tambahNim').val();
+            let token   = $("meta[name='csrf-token']").attr("content");
+            
+            //ajax
+            $.ajax({
+    
+                url: `/table`,
+                type: "POST",
+                cache: false,
+                data: {
+                    "nama": nama,
+                    "kelas": kelas,
+                    "nim": nim,
+                    "_token": token
+                },
+                success:function(response){
 
-      $('#tambahData').modal('hide')
-    });
+                    //close modal
+                    $('#modal-create').modal('hide');
+                    
+    
+                },
+    
+            });
+    
+        });
+    
+    // end add
+
+    
+    // $('#simpanData').on('click', function () {
+    //     t.row.add([$('#namaSiswa').val(), $('#kelasSiswa').val(), $('#nimSiswa').val(), '<td class="text-center"><button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#editData" title="Edit"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData" title="Delete"><i class="fas fa-trash"></i></button></td>'])
+    //                 .draw(false);
+
+    //   $('#tambahData').modal('hide')
+    // });
  
     // Automatically add a first row of data
     // $('#simpanData').click();

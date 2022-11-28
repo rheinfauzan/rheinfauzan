@@ -20,3 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\ControllerSatu::class, 'index'])->name('profile');
 
 Route::get('/tabel', [App\Http\Controllers\ControllerSatu::class, 'tabel'])->name('tabel');
+
+Route::get('/gettabel', [App\Http\Controllers\ControllerSatu::class, 'gettabel']);
+
+
