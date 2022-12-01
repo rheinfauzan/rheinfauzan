@@ -27,3 +27,6 @@ Route::get('/gettabel', [App\Http\Controllers\ControllerSatu::class, 'gettabel']
 
 // Route::post('/gettabel', [App\Http\Controllers\ControllerSatu::class, 'show']);
 Route::get('/show', [App\Http\Controllers\ControllerSatu::class, 'show']);
+
+Route::post('/update', [App\Http\Controllers\ControllerSatu::class, 'update']);
+

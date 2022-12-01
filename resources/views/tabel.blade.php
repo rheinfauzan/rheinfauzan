@@ -280,6 +280,7 @@
         e.preventDefault();
 
         //define variable
+        let id = $('#post_id').val();
         let nama   = $('#editNama').val();
         let kelas = $('#editKelas').val();
         let nim = $('#editNim').val();
@@ -288,10 +289,11 @@
         //ajax
         $.ajax({
 
-            url: `tabel`,
-            type: "PATCH",
+            url: `update`,
+            type: "POST",
             cache: false,
             data: {
+                "id": id,
                 "nama": nama,
                 "kelas": kelas,
                 "nim": nim,
@@ -304,8 +306,8 @@
                 $('#editNim').val('');
 
                 //close modal
-                $('#simpanPerubahan').modal('hide');
-                // .draw();
+                $('#editData').modal('hide');
+                t.draw();
             },
             
 
