@@ -21,6 +21,9 @@ Route::get('/', [App\Http\Controllers\ControllerSatu::class, 'index'])->name('pr
 
 Route::get('/tabel', [App\Http\Controllers\ControllerSatu::class, 'tabel'])->name('tabel');
 
+Route::post('/tabel', [App\Http\Controllers\ControllerSatu::class, 'store']);
+
 Route::get('/gettabel', [App\Http\Controllers\ControllerSatu::class, 'gettabel']);
 
-
+// Route::post('/gettabel', [App\Http\Controllers\ControllerSatu::class, 'show']);
+Route::get('/show', [App\Http\Controllers\ControllerSatu::class, 'show']);

@@ -32,7 +32,7 @@
               <!-- /.card-header -->
               <div class="card-body">
               <button class="btn btn-success btn-sm list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#tambahData">Tambah</button>
-               <table id="example1" class="table table-bordered table-striped" width="100%">
+               <table id="show" class="table table-bordered table-striped" width="100%">
                   <thead>
                     <tr>
                       <th width="30%" class="text-center">Nama</th>
@@ -106,7 +106,9 @@
         </div>
         <div class="modal-body">
           {{-- form --}}
+ 
           <form>
+            <input type="hidden" id="post_id">
             <div class="form-grub">
               <label for="namaSiswa">Nama</label>
               <input type="text" id="editNama" class="form-control" placeholder="Nama">
@@ -126,7 +128,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-primary" id="simpanPerubahan">Save changes</button>
         </div>
       </div>
     </div>
@@ -177,75 +179,143 @@
 
 @push('scripts')
 <script>
-  $(document).ready(function () {
-    var t = $("#example1").DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true,
-      "responsive": true,
-      "processing": true,
-                "serverSide": true,
-                "ajax": {url:"/gettabel"},
-                "columns": [
-                    { "data": "nama_kelas" },
-                    { "data": "kelas" },
-                    { "data": "nim_kelas" },
-                    { "data": "action" },                   
-                ],
-    "columnDefs": [
-      { className: "text-center", "targets": [ 3 ] }
-  ]
+    $.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
     });
-   // add 
-        //action create post
-        $('#simpanData').click(function(e) {
-            e.preventDefault();
-    
-            //define variable
-            let nama   = $('#tambahNama').val();
-            let kelas = $('#tambahKelas').val();
-            let nim   = $('#tambahNim').val();
-            let token   = $("meta[name='csrf-token']").attr("content");
-            
-            //ajax
-            $.ajax({
-    
-                url: `/table`,
-                type: "POST",
-                cache: false,
-                data: {
-                    "nama": nama,
-                    "kelas": kelas,
-                    "nim": nim,
-                    "_token": token
-                },
-                success:function(response){
 
-                    //close modal
-                    $('#modal-create').modal('hide');
-                    
-    
-                },
-    
-            });
-    
+    // get 
+    $(document).ready(function () {
+    var t = $("#show").DataTable({
+              "paging": true,
+              "lengthChange": false,
+              "searching": false,
+              "ordering": true,
+              "info": true,
+              "autoWidth": true,
+              "responsive": true,
+              "processing": true,
+              "serverSide": true,
+              "ajax": {url:"/gettabel"},
+              "columns": [
+                  { "data": "nama_kelas" },
+                  { "data": "kelas" },
+                  { "data": "nim_kelas" },
+                  { "data": "action" },                   
+              ],
+              "columnDefs": [
+                { className: "text-center", "targets": [ 3 ] },
+              ]
+    });
+
+
+    //action create post
+    $('#simpanData').click(function(e) {
+        e.preventDefault();
+
+        //define variable
+        let nama   = $('#tambahNama').val();
+        let kelas = $('#tambahKelas').val();
+        let nim = $('#tambahNim').val();
+        let token   = $("meta[name='csrf-token']").attr("content");
+        
+        //ajax
+        $.ajax({
+
+            url: `tabel`,
+            type: "POST",
+            cache: false,
+            data: {
+                "nama": nama,
+                "kelas": kelas,
+                "nim": nim,
+                "_token": token,
+            },
+            success:function(response){
+                //clear form
+                $('#tambahNama').val('');
+                $('#tambahKelas').val('');
+                $('#tambahNim').val('');
+
+                //close modal
+                $('#tambahData').modal('hide');
+                t.draw();
+            },
+            
+
+            error:function(error){
+            }
         });
-    
+
+    });
     // end add
 
-    
-    // $('#simpanData').on('click', function () {
-    //     t.row.add([$('#namaSiswa').val(), $('#kelasSiswa').val(), $('#nimSiswa').val(), '<td class="text-center"><button class="btn btn-success btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#editData" title="Edit"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm list-inline-item btn-circle" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData" title="Delete"><i class="fas fa-trash"></i></button></td>'])
-    //                 .draw(false);
+    // get data for edit
+    $('body section table tbody').on('click', ".edit", function(){
+      let post_id = $(this).data('id');
 
-    //   $('#tambahData').modal('hide')
-    // });
- 
-    // Automatically add a first row of data
-    // $('#simpanData').click();
+      $.ajax({
+          url: `/show`,
+          type: "GET",
+          cache: false,
+          data: {
+            "id": post_id,
+          },
+          success:function(response){
+
+              //fill data to form
+              $('#post_id').val(response.data.id);
+              $('#editNama').val(response.data.nama_kelas);
+              $('#editKelas').val(response.data.kelas);
+              $('#editNim').val(response.data.nim_kelas);
+          },
+      });
+    })
+    // end get data for edit
+
+    // 
+   //action create post
+   $('#simpanPerubahan').click(function(e) {
+        e.preventDefault();
+
+        //define variable
+        let nama   = $('#editNama').val();
+        let kelas = $('#editKelas').val();
+        let nim = $('#editNim').val();
+        let token   = $("meta[name='csrf-token']").attr("content");
+        
+        //ajax
+        $.ajax({
+
+            url: `tabel`,
+            type: "PATCH",
+            cache: false,
+            data: {
+                "nama": nama,
+                "kelas": kelas,
+                "nim": nim,
+                "_token": token,
+            },
+            success:function(response){
+                //clear form
+                $('#editNama').val('');
+                $('#editKelas').val('');
+                $('#editNim').val('');
+
+                //close modal
+                $('#simpanPerubahan').modal('hide');
+                // .draw();
+            },
+            
+
+            error:function(error){
+            }
+        });
+
+    });
+    // end add
+
 })
 </script>
 @endpush
