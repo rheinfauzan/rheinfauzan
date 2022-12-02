@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 //     return view('profile');
 // });
 
+// controller satu
 Route::get('/', [App\Http\Controllers\ControllerSatu::class, 'index'])->name('profile');
 
 Route::get('/tabel', [App\Http\Controllers\ControllerSatu::class, 'tabel'])->name('tabel');
@@ -31,3 +32,5 @@ Route::post('/update', [App\Http\Controllers\ControllerSatu::class, 'update']);
 
 Route::post('/delete', [App\Http\Controllers\ControllerSatu::class, 'delete']);
 
+// controller dua
+Route::resource('/tabel2', App\Http\Controllers\ControllerDua::class);

@@ -9,10 +9,6 @@ class Post extends Model
 {
     use HasFactory;
 
-    // protected $fillable = [
-    //     'nama_kelas',
-    //     'kelas',
-    //     'nim_kelas',
-    // ];
+    protected $guru1 = ['nama_guru','nip_guru','jabatan',];
 
 }

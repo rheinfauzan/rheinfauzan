@@ -145,7 +145,9 @@
     </div>
   </div>
 {{-- end modal edit --}}
-
+{{-- detail data --}}
+@include('components.show')
+{{-- end detail data --}}
 @endsection
 @push('styles')
   <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -353,47 +355,69 @@
     });
     // end add
 
-    // delete
-    $('body section table tbody').on('click', '.delete', function(){
+  // delete
+  $('body section table tbody').on('click', '.delete', function(){
+    let post_id = $(this).data('id');
+    let token   = $("meta[name='csrf-token']").attr("content");
+
+    Swal.fire({
+      title: 'Apakah kamu yakin ?',
+      text: 'ingin menghapus data ini!',
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: 'TIDAK',
+      confirmButtonText: 'YA!',
+    }).then((result) => {
+      if (result.isConfirmed){
+
+        // fetch to delete
+        $.ajax({
+              url: `delete`,
+              type: "POST",
+              cache: false,
+              data: {
+                  "id": post_id,
+                  "_token": token,
+              },
+                    success:function(response){
+                        Swal.fire({
+                          type: 'success',
+                          icon: 'success',
+                          title: `${response.message}`,
+                          showConfirmButton: false,
+                          timer: 1500,
+                        });
+
+                        //remove data from table
+                        $(`#index_${post_id}`).remove();
+                        t.draw();
+                    },
+          });
+        }
+      })
+    // end delete
+    })
+
+    $('body section table tbody').on('click', ".show", function(){
       let post_id = $(this).data('id');
-      let token   = $("meta[name='csrf-token']").attr("content");
 
-      Swal.fire({
-        title: 'Apakah kamu yakin ?',
-        text: 'ingin menghapus data ini!',
-        icon: "warning",
-        showCancelButton: true,
-        cancelButtonText: 'TIDAK',
-        confirmButtonText: 'YA!',
-      }).then((result) => {
-        if (result.isConfirmed){
 
-          // fetch to delete
-          $.ajax({
-                url: `delete`,
-                type: "POST",
-                cache: false,
-                data: {
-                    "id": post_id,
-                    "_token": token,
-                },
-                      success:function(response){
-                          Swal.fire({
-                            type: 'success',
-                            icon: 'success',
-                            title: `${response.message}`,
-                            showConfirmButton: false,
-                            timer: 1500,
-                          });
+      $.ajax({
+          url: `/show`,
+          type: "GET",
+          cache: false,
+          data: {
+            "id": post_id,
+          },
+          success:function(response){
 
-                          //remove data from table
-                          $(`#index_${post_id}`).remove();
-                          t.draw();
-                      },
-            });
-          }
-        })
-      // end delete
+              //fill data to form
+              $('#post_id').val(response.data.id);
+              $('#showNama').val(response.data.nama_kelas);
+              $('#showKelas').val(response.data.kelas);
+              $('#showNim').val(response.data.nim_kelas);
+          },
+      });
     })
 })
 </script>
