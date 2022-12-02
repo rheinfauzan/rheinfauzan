@@ -41,7 +41,7 @@
                       <th width="20%" class="text-left">Action</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="delete">
                   </tbody>
                 </table>
               </div>
@@ -73,14 +73,21 @@
             <div class="form-grub">
               <label for="namaSiswa">Nama</label>
               <input type="text" id="tambahNama" name="nama" class="form-control" placeholder="Nama">
+              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-title"></div>
             </div>
           <div class="form-grub">
             <label for="namaSiswa">Kelas</label>
-            <input type="text" id="tambahKelas" name="kelas" class="form-control" placeholder="Kelas">
+            <select name="kelas" id="tambahKelas" class="form-control" >
+              <option selected>Kelas</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+            </select>
           </div>
         <div class="form-grub">
           <label for="namaSiswa">NIM</label>
           <input type="text" id="tambahNim" name="nim" class="form-control" placeholder="NIM">
+          <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nim"></div>
         </div>
       </form>
           {{-- .form --}}
@@ -116,7 +123,11 @@
           </form>
           <div class="form-grub">
             <label for="namaSiswa">Kelas</label>
-            <input type="text" id="editKelas" class="form-control" placeholder="Siswa">
+            <select name="editkelas" id="editKelas" class="form-control" >
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+            </select>
           </div>
         </form>
         <div class="form-grub">
@@ -135,29 +146,13 @@
   </div>
 {{-- end modal edit --}}
 
-{{-- Modal hapus --}}
-<div class="modal fade" id="hapusData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Apakah anda yakin?</h2>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Hapus</button>
-      </div>
-    </div>
-  </div>
-</div>
-{{-- end Modal hapus --}}
 @endsection
 @push('styles')
   <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 @endpush
 
 @push('scripts')
@@ -175,6 +170,9 @@
   <script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
   <script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
   <script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+  <script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
 @endpush
 
 @push('scripts')
@@ -197,6 +195,7 @@
               "responsive": true,
               "processing": true,
               "serverSide": true,
+              "pageLength": 5,
               "ajax": {url:"/gettabel"},
               "columns": [
                   { "data": "nama_kelas" },
@@ -233,6 +232,14 @@
                 "_token": token,
             },
             success:function(response){
+              swal.fire({
+                            type: 'success',
+                            icon: 'success',
+                            title: `${response.message}`,
+                            showConfirmButton: true,
+                            timer: 1500,
+                });
+
                 //clear form
                 $('#tambahNama').val('');
                 $('#tambahKelas').val('');
@@ -245,6 +252,24 @@
             
 
             error:function(error){
+
+              if(error.responseJSON.nama[0]) {
+                      //show alert
+                      $('#alert-title').removeClass('d-none');
+                      $('#alert-title').addClass('d-block');
+
+                      //add message to alert
+                      $('#alert-title').html(error.responseJSON.nama[0]);
+                      } 
+              
+              if(error.responseJSON.nim[0]) {
+                      //show alert
+                      $('#alert-nim').removeClass('d-none');
+                      $('#alert-nim').addClass('d-block');
+
+                      //add message to alert
+                      $('#alert-nim').html(error.responseJSON.nim[0]);
+                      }
             }
         });
 
@@ -254,6 +279,7 @@
     // get data for edit
     $('body section table tbody').on('click', ".edit", function(){
       let post_id = $(this).data('id');
+
 
       $.ajax({
           url: `/show`,
@@ -274,7 +300,6 @@
     })
     // end get data for edit
 
-    // 
    //action create post
    $('#simpanPerubahan').click(function(e) {
         e.preventDefault();
@@ -300,6 +325,15 @@
                 "_token": token,
             },
             success:function(response){
+                // success update data
+                Swal.fire({
+                            type: 'success',
+                            icon: 'success',
+                            title: `${response.message}`,
+                            showConfirmButton: true,
+                            timer: 1500,
+                });
+
                 //clear form
                 $('#editNama').val('');
                 $('#editKelas').val('');
@@ -312,12 +346,55 @@
             
 
             error:function(error){
+
             }
         });
 
     });
     // end add
 
+    // delete
+    $('body section table tbody').on('click', '.delete', function(){
+      let post_id = $(this).data('id');
+      let token   = $("meta[name='csrf-token']").attr("content");
+
+      Swal.fire({
+        title: 'Apakah kamu yakin ?',
+        text: 'ingin menghapus data ini!',
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonText: 'TIDAK',
+        confirmButtonText: 'YA!',
+      }).then((result) => {
+        if (result.isConfirmed){
+
+          // fetch to delete
+          $.ajax({
+                url: `delete`,
+                type: "POST",
+                cache: false,
+                data: {
+                    "id": post_id,
+                    "_token": token,
+                },
+                      success:function(response){
+                          Swal.fire({
+                            type: 'success',
+                            icon: 'success',
+                            title: `${response.message}`,
+                            showConfirmButton: false,
+                            timer: 1500,
+                          });
+
+                          //remove data from table
+                          $(`#index_${post_id}`).remove();
+                          t.draw();
+                      },
+            });
+          }
+        })
+      // end delete
+    })
 })
 </script>
 @endpush

@@ -26,7 +26,7 @@ class ControllerSatu extends Controller
             return DataTables::of($table1)
                 ->addColumn('action', function($row){
                     return '<button data-id="'.$row->id.'" class="btn btn-success btn-xs list-inline-item edit" type="button" data-toggle="modal" data-placement="top" data-target="#editData">Edit</button>
-                    <button class="btn btn-danger btn-xs list-inline-item btn-circle delete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
+                    <button data-id="'.$row->id.'" class="btn btn-danger btn-xs list-inline-item btn-circle delete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -105,8 +105,15 @@ class ControllerSatu extends Controller
         ]);
     }
 
+    // delete
+    public function delete(Request $request)
+    {
+    $deleted = DB::table('table1')->where('id', $request->id)->delete();
 
-
-
+    return response()->json([
+        'success' => true,
+        'message' => 'Data Post Berhasil Dihapus!',
+    ]); 
+    }
 
 }
