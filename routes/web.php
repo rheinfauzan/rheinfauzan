@@ -33,4 +33,12 @@ Route::post('/update', [App\Http\Controllers\ControllerSatu::class, 'update']);
 Route::post('/delete', [App\Http\Controllers\ControllerSatu::class, 'delete']);
 
 // controller dua
-Route::resource('/tabel2', App\Http\Controllers\ControllerDua::class);
+Route::get('/tabel2', [App\Http\Controllers\ControllerDua::class, 'tabel2'])->name('tabel2');
+
+Route::get('/gettabel2', [App\Http\Controllers\ControllerDua::class, 'gettabel2']);
+
+Route::post('/tabel2', [App\Http\Controllers\ControllerDua::class, 'store']);
+
+Route::get('/getupdate', [App\Http\Controllers\ControllerDua::class, 'show']);
+
+Route::post('/updateData', [App\Http\Controllers\ControllerDua::class, 'update']);

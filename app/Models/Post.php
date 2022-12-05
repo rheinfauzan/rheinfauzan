@@ -9,6 +9,8 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $guru1 = ['nama_guru','nip_guru','jabatan',];
+    protected $table = "guru1";
+    protected $primaryKey = "id";
+    public $incrementing = true;
 
 }

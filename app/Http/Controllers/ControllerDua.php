@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Post;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
+
+
+class ControllerDua extends Controller
+{
+    public function tabel2()
+    {
+        return view('tabel2');
+    }
+
+    public function gettabel2()
+    {
+        $guru = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan')->get();
+        return DataTables::of($guru)
+            ->addColumn('action', function($row){
+                    return '
+                    <button data-id="'.$row->id.'" class="btn btn-success btn-xs list-inline-item edit" type="button" data-toggle="modal" data-placement="top" data-target="#editData">Edit</button>
+                    <button data-id="'.$row->id.'" class="btn btn-danger btn-xs list-inline-item btn-circle delete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
+                })
+            ->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function store(Request $request)
+    {
+        //define validation rules
+        $validator = Validator::make($request->all(), [
+            'nama'     => 'required',
+            'nip'   => 'required|numeric',
+            'jabatan'   => 'required',
+        ]);
+
+        $guru = new Post();
+        $guru->nama_guru = $request->nama;
+        $guru->nip_guru = $request->nip;
+        $guru->jabatan = $request->jabatan;
+        if($guru->save()){
+            return true;
+        };
+
+        //return response
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Disimpan!',
+        ]);
+    }
+
+
+    public function show(Request $request)
+    {
+        //return response
+        $showtabel = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan')->where('id', $request->id)->first();
+        // dd($nama);
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail Data Post',
+            'data' => $showtabel,
+        ]); 
+
+    }
+
+    public function update(Request $request)
+    {
+        //define validation rules
+        $validator = Validator::make($request->all(), [
+            'nama'     => 'required',
+            'nip'   => 'required|numeric',
+            'jabatan'   => 'required',
+        ]);
+
+        //check if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        //create post
+        Post::where('id', $request->id)
+        ->update([
+        'nama_guru' => $request->nama, 
+        'nip_guru'   => $request->nip,
+        'jabatan' => $request->jabatan,
+        ]);
+
+        //return response
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Disimpan!',
+        ]);
+    }
+}

@@ -41,7 +41,7 @@ class ControllerSatu extends Controller
         $validator = Validator::make($request->all(), [
             'nama'     => 'required',
             'kelas'   => 'required',
-            'nim'   => 'required',
+            'nim'   => 'required|numeric',
         ]);
 
         //check if validation fails

@@ -12,7 +12,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item active">DataTables 2</li>
             </ol>
           </div>
         </div>
@@ -31,17 +31,18 @@
                
               <!-- /.card-header -->
               <div class="card-body">
-              <button class="btn btn-success btn-sm list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#tambahData">Tambah</button>
-               <table id="show" class="table table-bordered table-striped" width="100%">
+              <button class="btn btn-success btn-xs list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#tambahDataGuru">Tambah</button>
+               <table id="showGuru" class="table table-bordered table-striped" width="100%">
                   <thead>
                     <tr>
-                      <th width="30%" class="text-center">Nama</th>
-                      <th width="20%" class="text-center">Kelas</th>
-                      <th width="30" class="text-center">NIM</th>
+
+                      <th width="30%" class="text-center">Nama Guru</th>
+                      <th width="20%" class="text-center">NIP Guru</th>
+                      <th width="30" class="text-center">Jabatan</th>
                       <th width="20%" class="text-left">Action</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="delete">
                   </tbody>
                 </table>
               </div>
@@ -57,8 +58,9 @@
     </section>
     <!-- /.content -->
   </div>
-  {{-- Modal tambah --}}
-  <div class="modal fade" id="tambahData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+  {{-- modal tambah --}}
+  <div class="modal fade" id="tambahDataGuru" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -71,25 +73,25 @@
           {{-- form --}}
           <form id="formTambah">
             <div class="form-grub">
-              <label for="namaSiswa">Nama</label>
-              <input type="text" id="tambahNama" name="nama" class="form-control" placeholder="Nama" maxlength="25">
-              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-title"></div>
+              <label for="namaGuru">Nama Guru</label>
+              <input type="text" id="tambahGuru" name="nama" class="form-control" placeholder="Nama Guru" maxlength="25">
+              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama"></div>
             </div>
-          <div class="form-grub">
-            <label for="namaSiswa">Kelas</label>
-            <select name="kelas" id="tambahKelas" class="form-control" >
-              <option selected>Kelas</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-            </select>
-          </div>
-        <div class="form-grub">
-          <label for="namaSiswa">NIM</label>
-          <input type="text" id="tambahNim" name="nim" class="form-control" placeholder="NIM" maxlength="4">
-          <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nim"></div>
-        </div>
-      </form>
+            <div class="form-grub">
+              <label for="nipGuru">NIP Guru</label>
+              <input type="text" id="tambahNip" name="nip" class="form-control" placeholder="NIP Guru" maxlength="10">
+              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nip"></div>
+            </div>
+            <div class="form-grub">
+              <label for="jabatan">Jabatan</label>
+              <select name="nip" id="tambahJabatan" class="form-control" >
+                <option value="Kepala Sekolah">Kepala Sekolah</option>
+                <option value="Guru">Guru</option>
+                <option value="Staff">Staff</option>
+              </select>
+              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-jabatan"></div>
+            </div>
+          </form>
           {{-- .form --}}
         </div>
         <div class="modal-footer">
@@ -106,7 +108,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Update Data</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -115,39 +117,35 @@
           {{-- form --}}
  
           <form>
-            <input type="hidden" id="post_id">
+            <input type="hidden" id="id">
             <div class="form-grub">
-              <label for="namaSiswa">Nama</label>
+              <label for="editNama">Nama</label>
               <input type="text" id="editNama" class="form-control" placeholder="Nama">
             </div>
+            <div class="form-grub">
+              <label for="nipGuru">NIP Guru</label>
+              <input type="text" id="editNip" name="nip" class="form-control" placeholder="NIP Guru" maxlength="10">
+              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nip"></div>
+            </div>
+            <div class="form-grub">
+              <label for="jabatan">Jabatan</label>
+              <select name="nip" id="editJabatan" class="form-control" >
+                <option value="Kepala Sekolah">Kepala Sekolah</option>
+                <option value="Guru">Guru</option>
+                <option value="Staff">Staff</option>
+              </select>
+              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-jabatan"></div>
+            </div>
           </form>
-          <div class="form-grub">
-            <label for="namaSiswa">Kelas</label>
-            <select name="editkelas" id="editKelas" class="form-control" >
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-            </select>
-          </div>
-        </form>
-        <div class="form-grub">
-          <label for="namaSiswa">NIM</label>
-          <input type="text" id="editNim" class="form-control" placeholder="Nama">
-        </div>
-      </form>
           {{-- .form --}}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="simpanPerubahan">Save changes</button>
+          <button type="button" class="btn btn-primary" id="simpanDataTerbaru">Save changes</button>
         </div>
       </div>
     </div>
   </div>
-{{-- end modal edit --}}
-{{-- detail data --}}
-@include('components.show')
-{{-- end detail data --}}
 @endsection
 @push('styles')
   <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -187,7 +185,7 @@
 
     // get 
     $(document).ready(function () {
-    var t = $("#show").DataTable({
+    var data = $("#showGuru").DataTable({
               "paging": true,
               "lengthChange": false,
               "searching": false,
@@ -197,12 +195,12 @@
               "responsive": true,
               "processing": true,
               "serverSide": true,
-              "pageLength": 5,
-              "ajax": {url:"/gettabel"},
-              "columns": [
-                  { "data": "nama_kelas" },
-                  { "data": "kelas" },
-                  { "data": "nim_kelas" },
+              "pageLength": 10,
+              "ajax": {url:"gettabel2"},
+              "columns": [       
+                  { "data": "nama_guru" },
+                  { "data": "nip_guru" },
+                  { "data": "jabatan" },
                   { "data": "action" },                   
               ],
               "columnDefs": [
@@ -210,27 +208,26 @@
               ]
     });
 
-
-    //action create post
+    // add data //
     $('#simpanData').click(function(e) {
         e.preventDefault();
 
         //define variable
-        let nama   = $('#tambahNama').val();
-        let kelas = $('#tambahKelas').val();
-        let nim = $('#tambahNim').val();
+        let nama   = $('#tambahGuru').val();
+        let nip = $('#tambahNip').val();
+        let jabatan = $('#tambahJabatan').val();
         let token   = $("meta[name='csrf-token']").attr("content");
         
         //ajax
         $.ajax({
 
-            url: `tabel`,
+            url: `tabel2`,
             type: "POST",
             cache: false,
             data: {
                 "nama": nama,
-                "kelas": kelas,
-                "nim": nim,
+                "nip": nip,
+                "jabatan": jabatan,
                 "_token": token,
             },
             success:function(response){
@@ -243,13 +240,14 @@
                 });
 
                 //clear form
-                $('#tambahNama').val('');
-                $('#tambahKelas').val('');
-                $('#tambahNim').val('');
+                $('#tambahGuru').val('');
+                $('#tambahNip').val('');
+                $('#tambahJabatan').val('');
 
                 //close modal
-                $('#tambahData').modal('hide');
-                t.draw();
+                $('#tambahDataGuru').modal('hide');
+                // refresh page
+                data.draw();
             },
             
 
@@ -257,78 +255,74 @@
 
               if(error.responseJSON.nama[0]) {
                       //show alert
-                      $('#alert-title').removeClass('d-none');
-                      $('#alert-title').addClass('d-block');
+                      $('#alert-nama').removeClass('d-none');
+                      $('#alert-nama').addClass('d-block');
 
                       //add message to alert
-                      $('#alert-title').html(error.responseJSON.nama[0]);
-                      } 
-              
-              if(error.responseJSON.nim[0]) {
-                      //show alert
-                      $('#alert-nim').removeClass('d-none');
-                      $('#alert-nim').addClass('d-block');
-
-                      //add message to alert
-                      $('#alert-nim').html(error.responseJSON.nim[0]);
+                      $('#alert-nama').html(error.responseJSON.nama[0]);
                       }
+
+              if(error.responseJSON.nip[0]) {
+                      //show alert
+                      $('#alert-nip').removeClass('d-none');
+                      $('#alert-nip').addClass('d-block');
+
+                      //add message to alert
+                      $('#alert-nip').html(error.responseJSON.nip[0]);
+                      } 
             }
         });
 
     });
     // end add
 
-    // get data for edit
-    $('body section table tbody').on('click', ".edit", function(){
-      let post_id = $(this).data('id');
+    // edit
+      // show edit
+        $('body section table tbody').on('click', '.edit', function(){
+          let id = $(this).data('id');
 
+          $.ajax({
+            url: `/getupdate`,
+            type: 'GET',
+            cache: false,
+            data: {
+              'id': id,
+            },
+              success:function(response){
+                  $('#id').val(response.data.id);
+                  $('#editNama').val(response.data.nama_guru);
+                  $('#editNip').val(response.data.nip_guru);
+                  $('#editJabatan').val(response.data.jabatan);
+              },
+          })
+        })
 
-      $.ajax({
-          url: `/show`,
-          type: "GET",
-          cache: false,
-          data: {
-            "id": post_id,
-          },
-          success:function(response){
-
-              //fill data to form
-              $('#post_id').val(response.data.id);
-              $('#editNama').val(response.data.nama_kelas);
-              $('#editKelas').val(response.data.kelas);
-              $('#editNim').val(response.data.nim_kelas);
-          },
-      });
-    })
-    // end get data for edit
-
-   //edit  post
-   $('#simpanPerubahan').click(function(e) {
+      // update edit
+      $('#simpanDataTerbaru').click(function(e) {
         e.preventDefault();
 
         //define variable
-        let id = $('#post_id').val();
+        let id = $('#id').val();
         let nama   = $('#editNama').val();
-        let kelas = $('#editKelas').val();
-        let nim = $('#editNim').val();
+        let nip = $('#editNip').val();
+        let jabatan = $('#editJabatan').val();
         let token   = $("meta[name='csrf-token']").attr("content");
         
         //ajax
         $.ajax({
 
-            url: `update`,
+            url: `updateData`,
             type: "POST",
             cache: false,
             data: {
                 "id": id,
                 "nama": nama,
-                "kelas": kelas,
-                "nim": nim,
+                "nip": nip,
+                "jabatan": jabatan,
                 "_token": token,
             },
             success:function(response){
-                // success update data
-                Swal.fire({
+              swal.fire({
                             type: 'success',
                             icon: 'success',
                             title: `${response.message}`,
@@ -338,87 +332,40 @@
 
                 //clear form
                 $('#editNama').val('');
-                $('#editKelas').val('');
-                $('#editNim').val('');
+                $('#editNip').val('');
+                $('#editJabatan').val('');
 
-                //close modal
+                // hide modal
                 $('#editData').modal('hide');
-                t.draw();
+                // refresh page
+                data.draw();
             },
             
 
             error:function(error){
 
+              if(error.responseJSON.nama[0]) {
+                      //show alert
+                      $('#alert-nama').removeClass('d-none');
+                      $('#alert-nama').addClass('d-block');
+
+                      //add message to alert
+                      $('#alert-nama').html(error.responseJSON.nama[0]);
+                      }
+
+              if(error.responseJSON.nip[0]) {
+                      //show alert
+                      $('#alert-nip').removeClass('d-none');
+                      $('#alert-nip').addClass('d-block');
+
+                      //add message to alert
+                      $('#alert-nip').html(error.responseJSON.nip[0]);
+                      } 
             }
         });
 
     });
-    // end add
-
-  // delete
-  $('body section table tbody').on('click', '.delete', function(){
-    let post_id = $(this).data('id');
-    let token   = $("meta[name='csrf-token']").attr("content");
-
-    Swal.fire({
-      title: 'Apakah kamu yakin ?',
-      text: 'ingin menghapus data ini!',
-      icon: "warning",
-      showCancelButton: true,
-      cancelButtonText: 'TIDAK',
-      confirmButtonText: 'YA!',
-    }).then((result) => {
-      if (result.isConfirmed){
-
-        // fetch to delete
-        $.ajax({
-              url: `delete`,
-              type: "POST",
-              cache: false,
-              data: {
-                  "id": post_id,
-                  "_token": token,
-              },
-                    success:function(response){
-                        Swal.fire({
-                          type: 'success',
-                          icon: 'success',
-                          title: `${response.message}`,
-                          showConfirmButton: false,
-                          timer: 1500,
-                        });
-
-                        //remove data from table
-                        $(`#index_${post_id}`).remove();
-                        t.draw();
-                    },
-          });
-        }
-      })
-    // end delete
-    })
-
-    $('body section table tbody').on('click', ".show", function(){
-      let post_id = $(this).data('id');
-
-
-      $.ajax({
-          url: `/show`,
-          type: "GET",
-          cache: false,
-          data: {
-            "id": post_id,
-          },
-          success:function(response){
-
-              //fill data to form
-              $('#post_id').val(response.data.id);
-              $('#showNama').val(response.data.nama_kelas);
-              $('#showKelas').val(response.data.kelas);
-              $('#showNim').val(response.data.nim_kelas);
-          },
-      });
-    })
+    // end edit
 })
 </script>
 @endpush
