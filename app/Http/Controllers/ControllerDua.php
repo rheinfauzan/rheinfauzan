@@ -95,4 +95,26 @@ class ControllerDua extends Controller
             'message' => 'Data Berhasil Disimpan!',
         ]);
     }
+    // softdelte
+    public function trash(Request $request)
+    {
+        $trash = Post::where('id', $request->id)->onlyTrashed();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data di hapus sementara',
+        ]);
+    }
+
+    // delete
+    public function delete(Request $request)
+    {
+        $deleted = Post::where('id', $request->id);
+        $deleted = $deleted->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Post Berhasil Dihapus!',
+        ]); 
+    }
 }

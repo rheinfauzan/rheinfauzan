@@ -42,3 +42,7 @@ Route::post('/tabel2', [App\Http\Controllers\ControllerDua::class, 'store']);
 Route::get('/getupdate', [App\Http\Controllers\ControllerDua::class, 'show']);
 
 Route::post('/updateData', [App\Http\Controllers\ControllerDua::class, 'update']);
+
+Route::post('/delete', [App\Http\Controllers\ControllerDua::class, 'delete']);
+
+Route::get('/trashed', [App\Http\Controllers\ControllerDua::class, 'trash']);

@@ -366,6 +366,67 @@
 
     });
     // end edit
+
+  // // delete
+  //   $('body section table tbody').on('click', '.delete', function(){
+  //   let delete_id = $(this).data('id');
+  //   let token   = $("meta[name='csrf-token']").attr("content");
+
+  //   Swal.fire({
+  //     title: 'Apakah kamu yakin ?',
+  //     text: 'ingin menghapus data ini!',
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     cancelButtonText: 'TIDAK',
+  //     confirmButtonText: 'YA!',
+  //   }).then((result) => {
+  //     if (result.isConfirmed){
+
+  //       // fetch to delete
+  //       $.ajax({
+  //             url: `delete`,
+  //             type: "POST",
+  //             cache: false,
+  //             data: {
+  //                 "id": delete_id,
+  //                 "_token": token,
+  //             },
+  //                   success:function(response){
+  //                       Swal.fire({
+  //                         type: 'success',
+  //                         icon: 'success',
+  //                         title: `${response.message}`,
+  //                         showConfirmButton: false,
+  //                         timer: 3000,
+  //                       });
+
+  //                       //remove data from table
+  //                       $(`#index_${delete_id}`).remove();
+  //                       // refresh web
+  //                       data.draw();
+  //                   },
+  //         });
+  //       };
+  //     })
+  // })
+  // // end delete
+
+  $('body section table tbody').on('click', '.delete', function(){
+    let trash_id = $(this).data('id');
+
+    $.ajax({
+      url: 'trashed',
+      type: 'GET',
+      cache: false,
+      data: {
+        'id': trash_id,
+      },
+      success:function(response) {
+        data.draw();
+        console.log('data ini diarchive');
+      }
+    })
+  })
 })
 </script>
 @endpush
