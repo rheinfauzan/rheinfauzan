@@ -23,6 +23,14 @@ class ControllerDua extends Controller
         
         if (!empty( $request->guru)) {
             $guru->where('nama_guru', 'like', '%'.$request->guru.'%');
+        } 
+
+        if (!empty($request->nip)) {
+            $guru->where('nip_guru', 'like', '%'.$request->nip.'%');
+        }
+
+        if (!empty($request->jabatan)) {
+            $guru->where('jabatan', 'like', $request->jabatan);
         }
 
 
