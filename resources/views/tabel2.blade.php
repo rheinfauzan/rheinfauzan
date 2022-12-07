@@ -411,8 +411,8 @@
 
             Swal.fire({
               title: 'Apakah kamu yakin ?',
-              text: 'ingin menghapus data ini!',
-              icon: "warning",
+              text: 'Data ini akan di archive',
+              icon: "info",
               showCancelButton: true,
               cancelButtonText: 'TIDAK',
               confirmButtonText: 'YA!',
@@ -478,7 +478,7 @@
 
           Swal.fire({
                 title: 'Apakah kamu yakin ?',
-                text: 'ingin menghapus data ini!',
+                text: 'ingin menghapus permanen data ini!',
                 icon: "warning",
                 showCancelButton: true,
                 cancelButtonText: 'TIDAK',
