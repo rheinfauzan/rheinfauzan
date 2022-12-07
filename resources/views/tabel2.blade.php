@@ -207,279 +207,212 @@
 
 @push('scripts')
 <script>
-    $.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-    });
-
-    // get 
-      $(document).ready(function () {
-      var data = $("#showGuru").DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-                "processing": true,
-                "serverSide": true,
-                "pageLength": 10,
-                "ajax": {
-                    url:"gettabel2", 
-                    data: function ( data ) {
-                          data.guru = $('#guru_filter').val();
-                          data.nip = $('#nip_filter').val();
-                          data.jabatan = $('#jabatan_filter').val();
-                        },
-                    },
-                "columns": [       
-                    { "data": "nama_guru" },
-                    { "data": "nip_guru" },
-                    { "data": "jabatan" },
-                    { "data": "action" },                   
-                ],
-                "columnDefs": [
-                  { className: "text-center", "targets": [ 3 ] },
-                ]
+      $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
       });
-    // end get
 
-    // add data //
-      $('#simpanData').click(function(e) {
-          e.preventDefault();
+      // get 
+        $(document).ready(function () {
+        var data = $("#showGuru").DataTable({
+                  "paging": true,
+                  "lengthChange": false,
+                  "searching": false,
+                  "ordering": true,
+                  "info": true,
+                  "autoWidth": true,
+                  "responsive": true,
+                  "processing": true,
+                  "serverSide": true,
+                  "pageLength": 10,
+                  "ajax": {
+                      url:"gettabel2", 
+                      data: function ( data ) {
+                            data.guru = $('#guru_filter').val();
+                            data.nip = $('#nip_filter').val();
+                            data.jabatan = $('#jabatan_filter').val();
+                          },
+                      },
+                  "columns": [       
+                      { "data": "nama_guru" },
+                      { "data": "nip_guru" },
+                      { "data": "jabatan" },
+                      { "data": "action" },                   
+                  ],
+                  "columnDefs": [
+                    { className: "text-center", "targets": [ 3 ] },
+                  ]
+        });
+      // end get
 
-          //define variable
-          let nama   = $('#tambahGuru').val();
-          let nip = $('#tambahNip').val();
-          let jabatan = $('#tambahJabatan').val();
-          let token   = $("meta[name='csrf-token']").attr("content");
-          
-          //ajax
-          $.ajax({
-              url: `tabel2`,
-              type: "POST",
+      // add data //
+        $('#simpanData').click(function(e) {
+            e.preventDefault();
+
+            //define variable
+            let nama   = $('#tambahGuru').val();
+            let nip = $('#tambahNip').val();
+            let jabatan = $('#tambahJabatan').val();
+            let token   = $("meta[name='csrf-token']").attr("content");
+            
+            //ajax
+            $.ajax({
+                url: `tabel2`,
+                type: "POST",
+                cache: false,
+                data: {
+                    "nama": nama,
+                    "nip": nip,
+                    "jabatan": jabatan,
+                    "_token": token,
+                },
+                success:function(response){
+                  Swal.fire({
+                                type: 'success',
+                                icon: 'success',
+                                title: `${response.message}`,
+                                showConfirmButton: true,
+                                timer: 3000,
+                    });
+
+                    //clear form
+                    $('#tambahGuru').val('');
+                    $('#tambahNip').val('');
+                    $('#tambahJabatan').val('');
+
+                    //close modal
+                    $('#tambahDataGuru').modal('hide');
+                    // refresh page
+                    data.draw();
+                },
+                
+
+                error:function(error){
+
+                  if(error.responseJSON.nama[0]) {
+                          //show alert
+                          $('#alert-nama').removeClass('d-none');
+                          $('#alert-nama').addClass('d-block');
+
+                          //add message to alert
+                          $('#alert-nama').html(error.responseJSON.nama[0]);
+                          }
+
+                  if(error.responseJSON.nip[0]) {
+                          //show alert
+                          $('#alert-nip').removeClass('d-none');
+                          $('#alert-nip').addClass('d-block');
+
+                          //add message to alert
+                          $('#alert-nip').html(error.responseJSON.nip[0]);
+                          } 
+                }
+            });
+
+        });
+      // end add
+
+      // edit
+        // show edit
+          $('body section table tbody').on('click', '.edit', function(){
+            let id = $(this).data('id');
+
+            $.ajax({
+              url: `/getupdate`,
+              type: 'GET',
               cache: false,
               data: {
-                  "nama": nama,
-                  "nip": nip,
-                  "jabatan": jabatan,
-                  "_token": token,
+                'id': id,
               },
-              success:function(response){
-                Swal.fire({
-                              type: 'success',
-                              icon: 'success',
-                              title: `${response.message}`,
-                              showConfirmButton: true,
-                              timer: 3000,
-                  });
-
-                  //clear form
-                  $('#tambahGuru').val('');
-                  $('#tambahNip').val('');
-                  $('#tambahJabatan').val('');
-
-                  //close modal
-                  $('#tambahDataGuru').modal('hide');
-                  // refresh page
-                  data.draw();
-              },
-              
-
-              error:function(error){
-
-                if(error.responseJSON.nama[0]) {
-                        //show alert
-                        $('#alert-nama').removeClass('d-none');
-                        $('#alert-nama').addClass('d-block');
-
-                        //add message to alert
-                        $('#alert-nama').html(error.responseJSON.nama[0]);
-                        }
-
-                if(error.responseJSON.nip[0]) {
-                        //show alert
-                        $('#alert-nip').removeClass('d-none');
-                        $('#alert-nip').addClass('d-block');
-
-                        //add message to alert
-                        $('#alert-nip').html(error.responseJSON.nip[0]);
-                        } 
-              }
-          });
-
-      });
-    // end add
-
-    // edit
-      // show edit
-        $('body section table tbody').on('click', '.edit', function(){
-          let id = $(this).data('id');
-
-          $.ajax({
-            url: `/getupdate`,
-            type: 'GET',
-            cache: false,
-            data: {
-              'id': id,
-            },
-              success:function(response){
-                  $('#id').val(response.data.id);
-                  $('#editNama').val(response.data.nama_guru);
-                  $('#editNip').val(response.data.nip_guru);
-                  $('#editJabatan').val(response.data.jabatan);
-              },
+                success:function(response){
+                    $('#id').val(response.data.id);
+                    $('#editNama').val(response.data.nama_guru);
+                    $('#editNip').val(response.data.nip_guru);
+                    $('#editJabatan').val(response.data.jabatan);
+                },
+            })
           })
-        })
 
-      // update edit
-      $('#simpanDataTerbaru').click(function(e) {
-        e.preventDefault();
+        // update edit
+          $('#simpanDataTerbaru').click(function(e) {
+            e.preventDefault();
 
-        //define variable
-        let id = $('#id').val();
-        let nama   = $('#editNama').val();
-        let nip = $('#editNip').val();
-        let jabatan = $('#editJabatan').val();
-        let token   = $("meta[name='csrf-token']").attr("content");
-        
-        //ajax
-        $.ajax({
-
-            url: `updateData`,
-            type: "POST",
-            cache: false,
-            data: {
-                "id": id,
-                "nama": nama,
-                "nip": nip,
-                "jabatan": jabatan,
-                "_token": token,
-            },
-            success:function(response){
-              swal.fire({
-                            type: 'success',
-                            icon: 'success',
-                            title: `${response.message}`,
-                            showConfirmButton: true,
-                            timer: 1500,
-                });
-
-                //clear form
-                $('#editNama').val('');
-                $('#editNip').val('');
-                $('#editJabatan').val('');
-
-                // hide modal
-                $('#editData').modal('hide');
-                // refresh page
-                data.draw();
-            },
+            //define variable
+            let id = $('#id').val();
+            let nama   = $('#editNama').val();
+            let nip = $('#editNip').val();
+            let jabatan = $('#editJabatan').val();
+            let token   = $("meta[name='csrf-token']").attr("content");
             
+            //ajax
+            $.ajax({
 
-            error:function(error){
-
-              if(error.responseJSON.nama[0]) {
-                      //show alert
-                      $('#alert-nama').removeClass('d-none');
-                      $('#alert-nama').addClass('d-block');
-
-                      //add message to alert
-                      $('#alert-nama').html(error.responseJSON.nama[0]);
-                      }
-
-              if(error.responseJSON.nip[0]) {
-                      //show alert
-                      $('#alert-nip').removeClass('d-none');
-                      $('#alert-nip').addClass('d-block');
-
-                      //add message to alert
-                      $('#alert-nip').html(error.responseJSON.nip[0]);
-                      } 
-            }
-        });
-
-     });
-    // end edit
-
-    // delete
-      $('body section table tbody').on('click', '.delete', function(){
-      let delete_id = $(this).data('id');
-      let token   = $("meta[name='csrf-token']").attr("content");
-
-            Swal.fire({
-              title: 'Apakah kamu yakin ?',
-              text: 'Data ini akan di archive',
-              icon: "info",
-              showCancelButton: true,
-              cancelButtonText: 'TIDAK',
-              confirmButtonText: 'YA!',
-              }).then((result) => {
-                if (result.isConfirmed){
-
-                  // fetch to delete
-                  $.ajax({
-                        url: `delete`,
-                        type: "POST",
-                        cache: false,
-                        data: {
-                            "id": delete_id,
-                            "_token": token,
-                        },
-                        success:function(response){
-                            Swal.fire({
-                              type: 'success',
-                              icon: 'success',
-                              title: `${response.message}`,
-                              showConfirmButton: false,
-                              timer: 3000,
-                            });
-
-                            // refresh web
-                            data.draw();
-                        },
+                url: `updateData`,
+                type: "POST",
+                cache: false,
+                data: {
+                    "id": id,
+                    "nama": nama,
+                    "nip": nip,
+                    "jabatan": jabatan,
+                    "_token": token,
+                },
+                success:function(response){
+                  swal.fire({
+                                type: 'success',
+                                icon: 'success',
+                                title: `${response.message}`,
+                                showConfirmButton: true,
+                                timer: 1500,
                     });
-            };
-        })
-      })
-    // end delete
 
-    // restore
-      $('body section table tbody').on('click', '.restore', function(){
-        let restore_id = $(this).data('id');
+                    //clear form
+                    $('#editNama').val('');
+                    $('#editNip').val('');
+                    $('#editJabatan').val('');
 
-        $.ajax({
-          url: 'restored',
-          type: 'GET',
-          cache: false,
-          data: {
-            'id': restore_id,
-          },
-          success:function(response) {
-            swal.fire({
-                type: 'success',
-                icon: 'success',
-                title: `${response.message}`,
-                showConfirmButton: false,
-                timer: 1500,
-                });
+                    // hide modal
+                    $('#editData').modal('hide');
+                    // refresh page
                     data.draw();
-          }
-        })
-      })
-    // end restore
+                },
+                
 
-    // forceDelete
-      $('body section table tbody').on('click', '.forceDelete', function(){
-        let forceDelete = $(this).data('id');
+                error:function(error){
+
+                  if(error.responseJSON.nama[0]) {
+                          //show alert
+                          $('#alert-nama').removeClass('d-none');
+                          $('#alert-nama').addClass('d-block');
+
+                          //add message to alert
+                          $('#alert-nama').html(error.responseJSON.nama[0]);
+                          }
+
+                  if(error.responseJSON.nip[0]) {
+                          //show alert
+                          $('#alert-nip').removeClass('d-none');
+                          $('#alert-nip').addClass('d-block');
+
+                          //add message to alert
+                          $('#alert-nip').html(error.responseJSON.nip[0]);
+                          } 
+                }
+            });
+
+          });
+      // end edit
+
+      // delete
+        $('body section table tbody').on('click', '.delete', function(){
+        let delete_id = $(this).data('id');
         let token   = $("meta[name='csrf-token']").attr("content");
 
-          Swal.fire({
+              Swal.fire({
                 title: 'Apakah kamu yakin ?',
-                text: 'ingin menghapus permanen data ini!',
-                icon: "warning",
+                text: 'Data ini akan di archive',
+                icon: "info",
                 showCancelButton: true,
                 cancelButtonText: 'TIDAK',
                 confirmButtonText: 'YA!',
@@ -488,11 +421,11 @@
 
                     // fetch to delete
                     $.ajax({
-                          url: `forcedelete`,
+                          url: `delete`,
                           type: "POST",
                           cache: false,
                           data: {
-                              "id": forceDelete,
+                              "id": delete_id,
                               "_token": token,
                           },
                           success:function(response){
@@ -508,25 +441,92 @@
                               data.draw();
                           },
                       });
-                    };
-                  })
+              };
+          })
         })
-    // end forceDelete
+      // end delete
 
-  // filter
-      $('#guru_filter,#nip_filter,#jabatan_filter').keydown(function(){
-        data.draw();
-      })
+      // restore
+        $('body section table tbody').on('click', '.restore', function(){
+          let restore_id = $(this).data('id');
 
-      $('#guru_filter,#nip_filter,#jabatan_filter').keyup(function(){
-        data.draw();
-      })
+          $.ajax({
+            url: 'restored',
+            type: 'GET',
+            cache: false,
+            data: {
+              'id': restore_id,
+            },
+            success:function(response) {
+              swal.fire({
+                  type: 'success',
+                  icon: 'success',
+                  title: `${response.message}`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                  });
+                      data.draw();
+            }
+          })
+        })
+      // end restore
 
-      $('#guru_filter,#nip_filter,#jabatan_filter').on('click', function(){
-        data.draw();
-      })
-  // end filter
+      // forceDelete
+        $('body section table tbody').on('click', '.forceDelete', function(){
+          let forceDelete = $(this).data('id');
+          let token   = $("meta[name='csrf-token']").attr("content");
 
-})
+            Swal.fire({
+                  title: 'Apakah kamu yakin ?',
+                  text: 'ingin menghapus permanen data ini!',
+                  icon: "warning",
+                  showCancelButton: true,
+                  cancelButtonText: 'TIDAK',
+                  confirmButtonText: 'YA!',
+                  }).then((result) => {
+                    if (result.isConfirmed){
+
+                      // fetch to delete
+                      $.ajax({
+                            url: `forcedelete`,
+                            type: "POST",
+                            cache: false,
+                            data: {
+                                "id": forceDelete,
+                                "_token": token,
+                            },
+                            success:function(response){
+                                Swal.fire({
+                                  type: 'success',
+                                  icon: 'success',
+                                  title: `${response.message}`,
+                                  showConfirmButton: false,
+                                  timer: 3000,
+                                });
+
+                                // refresh web
+                                data.draw();
+                            },
+                        });
+                      };
+                    })
+          })
+      // end forceDelete
+
+    // filter
+        $('#guru_filter,#nip_filter,#jabatan_filter').keydown(function(){
+          data.draw();
+        })
+
+        $('#guru_filter,#nip_filter,#jabatan_filter').keyup(function(){
+          data.draw();
+        })
+
+        $('#guru_filter,#nip_filter,#jabatan_filter').on('click', function(){
+          data.draw();
+        })
+    // end filter
+
+  })
 </script>
 @endpush
