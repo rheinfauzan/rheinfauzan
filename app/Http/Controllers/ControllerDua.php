@@ -16,14 +16,33 @@ class ControllerDua extends Controller
         return view('tabel2');
     }
 
-    public function gettabel2()
+    public function gettabel2(Request $request)
     {
-        $guru = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan')->get();
-        return DataTables::of($guru)
+      
+        $guru = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan', 'deleted_at');
+        
+        if (!empty( $request->guru)) {
+            $guru->where('nama_guru', 'like', '%'.$request->guru.'%');
+        }
+
+
+        
+
+        return DataTables::of($guru->withTrashed())
             ->addColumn('action', function($row){
-                    return '
-                    <button data-id="'.$row->id.'" class="btn btn-success btn-xs list-inline-item edit" type="button" data-toggle="modal" data-placement="top" data-target="#editData">Edit</button>
-                    <button data-id="'.$row->id.'" class="btn btn-danger btn-xs list-inline-item btn-circle delete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
+                $button = '';  
+                
+                if ($row->deleted_at == null) {
+                    $button .= '<button data-id="'.$row->id.'" class="btn btn-success btn-xs list-inline-item edit" type="button" data-toggle="modal" data-placement="top" data-target="#editData">Edit</button>';
+                    $button .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-xs list-inline-item btn-circle delete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
+                
+                } else {
+                    $button .= '<button data-id="'.$row->id.'" class="btn btn-primary btn-xs list-inline-item restore" type="button" data-toggle="modal" data-placement="top" data-target="#restoreData">Restore</button>';
+                    $button .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-xs list-inline-item btn-circle forceDelete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
+                };
+
+                return $button;
+                
                 })
             ->rawColumns(['action'])
             ->make(true);
@@ -43,14 +62,14 @@ class ControllerDua extends Controller
         $guru->nip_guru = $request->nip;
         $guru->jabatan = $request->jabatan;
         if($guru->save()){
-            return true;
+            //return response
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Post Berhasil Dihapus!',
+        ]);
         };
 
-        //return response
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Berhasil Disimpan!',
-        ]);
+  
     }
 
 
@@ -92,17 +111,7 @@ class ControllerDua extends Controller
         //return response
         return response()->json([
             'success' => true,
-            'message' => 'Data Berhasil Disimpan!',
-        ]);
-    }
-    // softdelte
-    public function trash(Request $request)
-    {
-        $trash = Post::where('id', $request->id)->onlyTrashed();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Data di hapus sementara',
+            'message' => 'Data Berhasil Diupdate!',
         ]);
     }
 
@@ -114,7 +123,28 @@ class ControllerDua extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Data Post Berhasil Dihapus!',
-        ]); 
+            'message' => 'Data Berhasil Diarchive!',
+        ]);
+    }
+
+    public function restore(Request $request)
+    { 
+        $restore = Post::where('id', $request->id);
+        $restore->restore();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Di Restore',
+        ]);
+    }
+
+    public function forcedelete(Request $request)
+    {
+        $forcedelete = Post::where('id', $request->id)->forceDelete();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Data berhasil dihapus!",
+        ]);
     }
 }

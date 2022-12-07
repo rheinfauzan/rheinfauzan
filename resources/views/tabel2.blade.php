@@ -22,6 +22,36 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
+        
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                    <div class="form-group col-3">
+                      <label for="guru_filter">Nama</label>
+                      <input type="text" name="guru_filter" class="form-control" id="guru_filter">
+                    </div>
+                    <div class="form-group col-3">
+                      <label for="nip_filter">NIP</label>
+                      <input type="text" name="nip_filter" class="form-control" id="nip_filter">
+                    </div>
+                    <div class="form-group col-3">
+                      <label for="jabatan_filter">Jabatan</label>
+                      <select name="jabatan_filter" id="jabatan_filter" class="form-control" class="form-control" >
+                        <option value=""></option>
+                        <option value="Kepala Sekolah">Kepala Sekolah</option>
+                        <option value="Guru">Guru</option>
+                        <option value="Staff">Staff</option>
+                      </select> 
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col-12">
             <div class="card">
@@ -31,20 +61,20 @@
                
               <!-- /.card-header -->
               <div class="card-body">
-              <button class="btn btn-success btn-xs list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#tambahDataGuru">Tambah</button>
-               <table id="showGuru" class="table table-bordered table-striped" width="100%">
-                  <thead>
-                    <tr>
+                <button class="btn btn-success btn-xs list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#tambahDataGuru">Tambah</button>
+                <table id="showGuru" class="table table-bordered table-striped" width="100%">
+                    <thead>
+                      <tr>
 
-                      <th width="30%" class="text-center">Nama Guru</th>
-                      <th width="20%" class="text-center">NIP Guru</th>
-                      <th width="30" class="text-center">Jabatan</th>
-                      <th width="20%" class="text-left">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="delete">
-                  </tbody>
-                </table>
+                        <th width="30%" class="text-center">Nama Guru</th>
+                        <th width="20%" class="text-center">NIP Guru</th>
+                        <th width="30" class="text-center">Jabatan</th>
+                        <th width="20%" class="text-left">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="delete">
+                    </tbody>
+                  </table>
               </div>
               <!-- /.card-body -->
             </div>
@@ -196,7 +226,14 @@
               "processing": true,
               "serverSide": true,
               "pageLength": 10,
-              "ajax": {url:"gettabel2"},
+              "ajax": {
+                  url:"gettabel2", 
+                  data: function ( d ) {
+                        d.guru = $('#guru_filter').val();
+                        d.nip = $('#nip_filter').val();
+                        d.jabatan = $('#jabatan_filter').val();
+                      },
+                  },
               "columns": [       
                   { "data": "nama_guru" },
                   { "data": "nip_guru" },
@@ -220,7 +257,6 @@
         
         //ajax
         $.ajax({
-
             url: `tabel2`,
             type: "POST",
             cache: false,
@@ -231,12 +267,12 @@
                 "_token": token,
             },
             success:function(response){
-              swal.fire({
+              Swal.fire({
                             type: 'success',
                             icon: 'success',
                             title: `${response.message}`,
                             showConfirmButton: true,
-                            timer: 1500,
+                            timer: 3000,
                 });
 
                 //clear form
@@ -364,69 +400,124 @@
             }
         });
 
-    });
+     });
     // end edit
 
-  // // delete
-  //   $('body section table tbody').on('click', '.delete', function(){
-  //   let delete_id = $(this).data('id');
-  //   let token   = $("meta[name='csrf-token']").attr("content");
+  // delete
+    $('body section table tbody').on('click', '.delete', function(){
+    let delete_id = $(this).data('id');
+    let token   = $("meta[name='csrf-token']").attr("content");
 
-  //   Swal.fire({
-  //     title: 'Apakah kamu yakin ?',
-  //     text: 'ingin menghapus data ini!',
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     cancelButtonText: 'TIDAK',
-  //     confirmButtonText: 'YA!',
-  //   }).then((result) => {
-  //     if (result.isConfirmed){
+          Swal.fire({
+            title: 'Apakah kamu yakin ?',
+            text: 'ingin menghapus data ini!',
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonText: 'TIDAK',
+            confirmButtonText: 'YA!',
+            }).then((result) => {
+              if (result.isConfirmed){
 
-  //       // fetch to delete
-  //       $.ajax({
-  //             url: `delete`,
-  //             type: "POST",
-  //             cache: false,
-  //             data: {
-  //                 "id": delete_id,
-  //                 "_token": token,
-  //             },
-  //                   success:function(response){
-  //                       Swal.fire({
-  //                         type: 'success',
-  //                         icon: 'success',
-  //                         title: `${response.message}`,
-  //                         showConfirmButton: false,
-  //                         timer: 3000,
-  //                       });
+                // fetch to delete
+                $.ajax({
+                      url: `delete`,
+                      type: "POST",
+                      cache: false,
+                      data: {
+                          "id": delete_id,
+                          "_token": token,
+                      },
+                      success:function(response){
+                          Swal.fire({
+                            type: 'success',
+                            icon: 'success',
+                            title: `${response.message}`,
+                            showConfirmButton: false,
+                            timer: 3000,
+                          });
 
-  //                       //remove data from table
-  //                       $(`#index_${delete_id}`).remove();
-  //                       // refresh web
-  //                       data.draw();
-  //                   },
-  //         });
-  //       };
-  //     })
-  // })
-  // // end delete
-
-  $('body section table tbody').on('click', '.delete', function(){
-    let trash_id = $(this).data('id');
-
-    $.ajax({
-      url: 'trashed',
-      type: 'GET',
-      cache: false,
-      data: {
-        'id': trash_id,
-      },
-      success:function(response) {
-        data.draw();
-        console.log('data ini diarchive');
-      }
+                          // refresh web
+                          data.draw();
+                      },
+                  });
+          };
+      })
     })
-  })
+  // end delete
+
+  // restore
+    $('body section table tbody').on('click', '.restore', function(){
+      let restore_id = $(this).data('id');
+
+      $.ajax({
+        url: 'restored',
+        type: 'GET',
+        cache: false,
+        data: {
+          'id': restore_id,
+        },
+        success:function(response) {
+          swal.fire({
+              type: 'success',
+              icon: 'success',
+              title: `${response.message}`,
+              showConfirmButton: false,
+              timer: 1500,
+              });
+                  data.draw();
+        }
+      })
+    })
+  // end restore
+
+  // forceDelete
+    $('body section table tbody').on('click', '.forceDelete', function(){
+      let forceDelete = $(this).data('id');
+      let token   = $("meta[name='csrf-token']").attr("content");
+
+        Swal.fire({
+              title: 'Apakah kamu yakin ?',
+              text: 'ingin menghapus data ini!',
+              icon: "warning",
+              showCancelButton: true,
+              cancelButtonText: 'TIDAK',
+              confirmButtonText: 'YA!',
+              }).then((result) => {
+                if (result.isConfirmed){
+
+                  // fetch to delete
+                  $.ajax({
+                        url: `forcedelete`,
+                        type: "POST",
+                        cache: false,
+                        data: {
+                            "id": forceDelete,
+                            "_token": token,
+                        },
+                        success:function(response){
+                            Swal.fire({
+                              type: 'success',
+                              icon: 'success',
+                              title: `${response.message}`,
+                              showConfirmButton: false,
+                              timer: 3000,
+                            });
+
+                            // refresh web
+                            data.draw();
+                        },
+                    });
+                  };
+                })
+      })
+  // end forceDelete
+
+  // filter
+      $('#guru_filter,#nip_filter,#jabatan_filter').on('change', function(){
+        data.draw();
+      })
+  // end filter
+
 })
 </script>
 @endpush

@@ -45,4 +45,6 @@ Route::post('/updateData', [App\Http\Controllers\ControllerDua::class, 'update']
 
 Route::post('/delete', [App\Http\Controllers\ControllerDua::class, 'delete']);
 
-Route::get('/trashed', [App\Http\Controllers\ControllerDua::class, 'trash']);
+Route::get('/restored', [App\Http\Controllers\ControllerDua::class, 'restore']);
+
+Route::post('/forcedelete', [App\Http\Controllers\ControllerDua::class, 'forcedelete']);
