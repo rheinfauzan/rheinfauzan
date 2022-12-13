@@ -403,7 +403,7 @@
 
           });
       // end edit
-
+  
       // delete
         $('body section table tbody').on('click', '.delete', function(){
         let delete_id = $(this).data('id');

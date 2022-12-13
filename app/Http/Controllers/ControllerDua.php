@@ -47,7 +47,7 @@ class ControllerDua extends Controller
                 } else {
                     $button .= '<button data-id="'.$row->id.'" class="btn btn-primary btn-xs list-inline-item restore" type="button" data-toggle="modal" data-placement="top" data-target="#restoreData">Restore</button>';
                     $button .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-xs list-inline-item btn-circle forceDelete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
-                };
+                };  
 
                 return $button;
                 

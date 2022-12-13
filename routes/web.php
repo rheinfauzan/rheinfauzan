@@ -48,3 +48,11 @@ Route::post('/delete', [App\Http\Controllers\ControllerDua::class, 'delete']);
 Route::get('/restored', [App\Http\Controllers\ControllerDua::class, 'restore']);
 
 Route::post('/forcedelete', [App\Http\Controllers\ControllerDua::class, 'forcedelete']);
+
+
+// Controller tiga
+Route::get('/mahasiswa', [App\Http\Controllers\ControllerTiga::class, 'mahasiswa']);
+
+Route::get('/get', [App\Http\Controllers\ControllerTiga::class, 'get']);
+
+Route::post('/store', [App\Http\Controllers\ControllerTiga::class, 'store']);
