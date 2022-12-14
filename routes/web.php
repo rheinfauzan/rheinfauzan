@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 //     return view('profile');
 // });
 
+
+// controller login
+
+
+
 // controller satu
 Route::get('/', [App\Http\Controllers\ControllerSatu::class, 'index'])->name('profile');
 
