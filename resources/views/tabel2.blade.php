@@ -514,15 +514,11 @@
       // end forceDelete
 
     // filter
-        $('#guru_filter,#nip_filter,#jabatan_filter').keydown(function(){
+        $('#guru_filter,#nip_filter').keyup(function(){
           data.draw();
         })
 
-        $('#guru_filter,#nip_filter,#jabatan_filter').keyup(function(){
-          data.draw();
-        })
-
-        $('#guru_filter,#nip_filter,#jabatan_filter').on('click', function(){
+        $('#jabatan_filter').on('click', function(){
           data.draw();
         })
     // end filter
