@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ControllerSatu extends Controller
 {
-    public function index(){
+    public function profile(){
         return view('profile');
     }
 

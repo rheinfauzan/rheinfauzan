@@ -19,11 +19,19 @@ use Illuminate\Support\Facades\Route;
 
 
 // controller login
+Route::get('/', [App\Http\Controllers\ControllerLogin::class, 'login']);
+
+Route::get('register', [App\Http\Controllers\ControllerLogin::class, 'register']);
+
+Route::post('register-store', [App\Http\Controllers\ControllerLogin::class, 'store']);
+
+Route::post('login-check', [App\Http\Controllers\ControllerLogin::class, 'check_login']);
+
 
 
 
 // controller satu
-Route::get('/', [App\Http\Controllers\ControllerSatu::class, 'index'])->name('profile');
+Route::get('/profile', [App\Http\Controllers\ControllerSatu::class, 'profile']);
 
 Route::get('/tabel', [App\Http\Controllers\ControllerSatu::class, 'tabel'])->name('tabel');
 
