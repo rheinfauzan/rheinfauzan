@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -26,8 +29,9 @@
       <p class="login-box-msg">Sign in to start your session</p>
 
       <form>
+        @csrf 
         <div class="input-group mb-3">
-          <input id="emailLogin" type="email" class="form-control" placeholder="Email">
+          <input id="emailLogin" type="email" class="form-control" placeholder="Email" autofocus>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -70,7 +74,7 @@
       <!-- /.social-auth-links -->
 
       <p class="mb-1">
-        <a href="forgot-password.html">I forgot my password</a>
+        <a href="{{ url('forgotpassword') }}">I forgot my password</a>
       </p>
       <p class="mb-0">
         <a href="{{ url('register') }}" class="text-center">Register a new membership</a>
@@ -134,8 +138,8 @@
 
                                 Swal.fire({
                                     type: 'success',
+                                    icon: 'success',
                                     title: 'Login Berhasil!',
-                                    text: 'Anda akan di arahkan dalam 3 Detik',
                                     timer: 3000,
                                     showCancelButton: false,
                                     showConfirmButton: false
@@ -164,6 +168,7 @@
 
                     Swal.fire({
                         type: 'error',
+                        icon: 'error',
                         title: 'Opps!',
                         text: 'server error!'
                     });

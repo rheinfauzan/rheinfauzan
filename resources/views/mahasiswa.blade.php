@@ -23,13 +23,13 @@
     <section class="content">
       <div class="container-fluid">
         
-        <div class="row">
+        {{-- <div class="row">
           <div class="col-12">
             <div class="card">
               <div class="card-body">
                 <div class="row">
                     <div class="form-group col-3">
-                      <label for="guru_filter">Nama</label>
+                      <label for="guru_filter">Angkatan</label>
                       <input type="text" name="guru_filter" class="form-control" id="guru_filter">
                     </div>
                     <div class="form-group col-3">
@@ -50,7 +50,38 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> --}}
+        <!-- Main content -->
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12">
+                <!-- BAR CHART -->
+                <div class="card card-success">
+                  <div class="card-header">
+                    <h3 class="card-title">Bar Chart</h3>
+    
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart">
+                      <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+              </div>
+              <!-- /.col (RIGHT) -->
+            </div>
+            <!-- /.row -->
+          </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
 
         <div class="row">
           <div class="col-12">
@@ -65,9 +96,9 @@
                 <table id="tbmahasiswa" class="table table-bordered table-striped" width="100%">
                     <thead>
                       <tr>
-                        <th width="30%" class="text-center">Nama Mahasiswa</th>
-                        <th width="20%" class="text-center">NIM Mahasiswa</th>
-                        <th width="20%" class="text-left">Action</th>
+                        <th width="50%" class="text-center">Angkatan</th>
+                        <th width="45%" class="text-center">Jumlah Mahasiswa</th>
+                        <th width="7%" class="text-center">Aksi</th>
                       </tr>
                     </thead>
                     <tbody id="delete">
@@ -86,8 +117,7 @@
     </section>
     <!-- /.content -->
   </div>
-
-  {{-- modal tambah --}}
+  {{-- Modal tambah --}}
   <div class="modal fade" id="tambahDataMahasiswa" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -101,16 +131,16 @@
           {{-- form --}}
           <form id="formTambah">
             <div class="form-grub">
-              <label for="namaMahasiswa">Nama Mahasiswa</label>
-              <input type="text" id="tambahMahasiswa" name="nama" class="form-control" placeholder="Nama Mahasiswa" maxlength="25">
-              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama"></div>
+              <label for="tahunAngkatan">Tahun Angkatan</label>
+              <input type="date" id="angkatan" name="nama" class="form-control" placeholder="Tahun Angkatan" maxlength="4">
+              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-title"></div>
             </div>
-            <div class="form-grub">
-              <label for="nimMahasiswa">NIM Mahasiswa</label>
-              <input type="text" id="tambahNim" name="nip" class="form-control" placeholder="NIM Mahasiswa" maxlength="10">
-              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nim"></div>
-            </div>
-          </form>
+        <div class="form-grub">
+          <label for="jumlahMahasiswa">Jumlah Mahasiswa</label>
+          <input type="text" id="jml_mahasiswa" name="jml_mahasiswa" class="form-control" placeholder="Jumlah Mahasiswa" maxlength="10">
+          <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nim"></div>
+        </div>
+      </form>
           {{-- .form --}}
         </div>
         <div class="modal-footer">
@@ -122,49 +152,6 @@
   </div>
   {{-- end Modal tambah --}}
 
-  {{-- Modal edit --}}
-  <div class="modal fade" id="editData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Update Data</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          {{-- form --}}
- 
-          <form>
-            <input type="hidden" id="id">
-            <div class="form-grub">
-              <label for="editNama">Nama</label>
-              <input type="text" id="editNama" class="form-control" placeholder="Nama">
-            </div>
-            <div class="form-grub">
-              <label for="nipGuru">NIP Guru</label>
-              <input type="text" id="editNip" name="nip" class="form-control" placeholder="NIP Guru" maxlength="10">
-              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nip"></div>
-            </div>
-            <div class="form-grub">
-              <label for="jabatan">Jabatan</label>
-              <select name="nip" id="editJabatan" class="form-control" >
-                <option value="Kepala Sekolah">Kepala Sekolah</option>
-                <option value="Guru">Guru</option>
-                <option value="Staff">Staff</option>
-              </select>
-              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-jabatan"></div>
-            </div>
-          </form>
-          {{-- .form --}}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="simpanDataTerbaru">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
 @endsection
 
 @push('styles')
@@ -196,6 +183,69 @@
   {{-- Input mask --}}
   <script src="/plugins/inputmask/jquery.inputmask.js"></script>
   <script src="/plugins/inputmask/inputmask.js"></script>
+  <!-- ChartJS -->
+  <script src="/plugins/chart.js/Chart.min.js"></script>
+@endpush
+
+@push('scripts')
+    <script>
+    $(function() {
+        let jml_mhs = $(this).data('jml_mhs');
+        // Get context with jQuery - using jQuery's .get() method
+        var areaChartData = {
+          labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+          datasets: [
+            {
+              label               : 'Digital Goods',
+              backgroundColor     : 'rgba(60,141,188,0.9)',
+              borderColor         : 'rgba(60,141,188,0.8)',
+              pointRadius          : false,
+              pointColor          : '#3b8bba',
+              pointStrokeColor    : 'rgba(60,141,188,1)',
+              pointHighlightFill  : '#fff',
+              pointHighlightStroke: 'rgba(60,141,188,1)',
+              data                : {
+                    'jml_mhs': jml_mhs,
+              }
+            },
+            {
+              label               : 'Electronics',
+              backgroundColor     : 'rgba(210, 214, 222, 1)',
+              borderColor         : 'rgba(210, 214, 222, 1)',
+              pointRadius         : false,
+              pointColor          : 'rgba(210, 214, 222, 1)',
+              pointStrokeColor    : '#c1c7d1',
+              pointHighlightFill  : '#fff',
+              pointHighlightStroke: 'rgba(220,220,220,1)',
+              data                : [65, 59, 80, 81, 56, 55, 40]
+            },
+          ]
+        }
+
+
+          //-------------
+          //- BAR CHART -
+          //-------------
+          var barChartCanvas = $('#barChart').get(0).getContext('2d')
+          var barChartData = $.extend(true, {}, areaChartData)
+          var temp0 = areaChartData.datasets[0]
+          var temp1 = areaChartData.datasets[1]
+          barChartData.datasets[0] = temp1
+          barChartData.datasets[1] = temp0
+
+          var barChartOptions = {
+            responsive              : true,
+            maintainAspectRatio     : false,
+            datasetFill             : false
+          }
+
+          new Chart(barChartCanvas, {
+            type: 'bar',
+            data: barChartData,
+            options: barChartOptions
+          })
+          })
+    </script>
 @endpush
 
 @push('scripts')
@@ -207,14 +257,8 @@
     });
 
     $(document).ready(function() {
-        $('#tambahNim').inputmask({
-          'mask': '9',
-          'repeat': 10,
-          'greedy': false,
-        });
-
         var mahasiswa = $("#tbmahasiswa").DataTable({
-                  "paging": true,
+                  "paging": false,
                   "lengthChange": true,
                   "searching": false,
                   "ordering": true,
@@ -228,74 +272,16 @@
                       url:"/get" 
                       },
                   "columns": [       
-                      { "data": "nama_mhs" },
-                      { "data": "nim_mhs" },
-                      { "data": "action" },                   
+                      { "data": "angkatan" },
+                      { "data": "jml_mhs" },
+                      { "data": "aksi"},
                   ],
                   "columnDefs": [
-                    { className: "text-center", "targets": [ 2 ] },
+                    { className: "text-center", "targets": [ 0, 1, 2] },
                   ]
         });
 
-
-        $('#simpanData').on('click', function(e) {
-
-          let nama = $('#tambahMahasiswa').val();
-          let nim   = $('#tambahNim').val();
-          let token   = $("meta[name='csrf-token']").attr("content");
-
-          $.ajax({
-            url: '/store',
-            type: "POST",
-            cache: false,
-                data: {
-                    "nama_mhs": nama,
-                    "nim_mhs": nim,
-                    "_token": token,
-                },
-                success:function(response){
-                  Swal.fire({
-                                type: 'success',
-                                icon: 'success',
-                                title: `${response.message}`,
-                                showConfirmButton: true,
-                                timer: 1000,
-                    });
-
-                    //clear form
-                    $('#tambahMahasiswa').val('');
-                    $('#tambahNim').val('');
-
-                    //close modal
-                    $('#tambahDataMahasiswa').modal('hide');
-                    // refresh page
-                    mahasiswa.ajax.reload();
-                },
-                
-
-                error:function(error){
-
-                  if(error.responseJSON.nama[0]) {
-                          //show alert
-                          $('#alert-nama').removeClass('d-none');
-                          $('#alert-nama').addClass('d-block');
-
-                          //add message to alert
-                          $('#alert-nama').html(error.responseJSON.nama[0]);
-                          }
-
-                  if(error.responseJSON.nip[0]) {
-                          //show alert
-                          $('#alert-nim').removeClass('d-none');
-                          $('#alert-nim').addClass('d-block');
-
-                          //add message to alert
-                          $('#alert-nim').html(error.responseJSON.nim[0]);
-                          } 
-                }
-            });
-          })
-
+        
 
 })
 </script>

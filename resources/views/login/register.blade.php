@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+   <!-- SweetAlert2 -->
+   <link rel="stylesheet" href="/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 </head>
 <body class="hold-transition register-page">
 <div class="register-box">
@@ -146,6 +148,7 @@
 
                           Swal.fire({
                               type: "success",
+                              icon: "success",
                               title: "Register berhasil",
                               text: "Register user telah berhasil"
                           });
@@ -159,6 +162,7 @@
 
                           Swal.fire({
                                     type: 'error',
+                                    icon: 'error',
                                     title: 'Register Gagal!',
                                     text: 'silahkan coba lagi!'
                                 });
@@ -171,6 +175,7 @@
 
                         Swal.fire({
                           type: 'error',
+                          icon: 'error',
                           title: 'Opps...',
                           text: 'server error!',
                         });

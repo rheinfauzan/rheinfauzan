@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,58 +15,73 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Route::get('/', function () {
-//     return view('profile');
+//     return view('login/login');
 // });
 
 
 // controller login
-Route::get('/', [App\Http\Controllers\ControllerLogin::class, 'login']);
 
-Route::get('register', [App\Http\Controllers\ControllerLogin::class, 'register']);
+Route::get('/', [App\Http\Controllers\LoginController::class, 'index'])->name('login');
 
-Route::post('register-store', [App\Http\Controllers\ControllerLogin::class, 'store']);
+Route::post('login-check', [App\Http\Controllers\LoginController::class, 'check_login']);
 
-Route::post('login-check', [App\Http\Controllers\ControllerLogin::class, 'check_login']);
+Route::get('register', [App\Http\Controllers\RegisterController::class, 'register'])->middleware('guest');
 
+Route::post('register-store', [App\Http\Controllers\RegisterController::class, 'store']);
 
-
-
-// controller satu
-Route::get('/profile', [App\Http\Controllers\ControllerSatu::class, 'profile']);
-
-Route::get('/tabel', [App\Http\Controllers\ControllerSatu::class, 'tabel'])->name('tabel');
-
-Route::post('/tabel', [App\Http\Controllers\ControllerSatu::class, 'store']);
-
-Route::get('/gettabel', [App\Http\Controllers\ControllerSatu::class, 'gettabel']);
-
-Route::get('/show', [App\Http\Controllers\ControllerSatu::class, 'show']);
-
-Route::post('/update', [App\Http\Controllers\ControllerSatu::class, 'update']);
-
-Route::post('/delete', [App\Http\Controllers\ControllerSatu::class, 'delete']);
-
-// controller dua
-Route::get('/tabel2', [App\Http\Controllers\ControllerDua::class, 'tabel2'])->name('tabel2');
-
-Route::get('/gettabel2', [App\Http\Controllers\ControllerDua::class, 'gettabel2']);
-
-Route::post('/tabel2', [App\Http\Controllers\ControllerDua::class, 'store']);
-
-Route::get('/getupdate', [App\Http\Controllers\ControllerDua::class, 'show']);
-
-Route::post('/updateData', [App\Http\Controllers\ControllerDua::class, 'update']);
-
-Route::post('/delete', [App\Http\Controllers\ControllerDua::class, 'delete']);
-
-Route::get('/restored', [App\Http\Controllers\ControllerDua::class, 'restore']);
-
-Route::post('/forcedelete', [App\Http\Controllers\ControllerDua::class, 'forcedelete']);
+Route::get('signout', [App\Http\Controllers\LoginController::class, 'logout']);
 
 
-// Controller tiga
-Route::get('/mahasiswa', [App\Http\Controllers\ControllerTiga::class, 'mahasiswa']);
 
-Route::get('/get', [App\Http\Controllers\ControllerTiga::class, 'get']);
 
-Route::post('/store', [App\Http\Controllers\ControllerTiga::class, 'store']);
+// // controller forgot
+// Route::get('forgotpassword', [App\Http\Controllers\ControllerForgotPassword::class, 'forgotPassword']);
+
+// Route::post('submitforgotpassword', [App\Http\Controllers\ControllerForgotPassword::class, 'submitForgotPassword']);
+
+// Route::get('resetpassword', [App\Http\Controllers\ControllerForgotPassword::class, 'resetPassword']);
+
+// Route::post('submitforgotpassword', [App\Http\Controllers\ControllerForgotPassword::class, 'submitForgotPassword']);
+
+Route::middleware(['auth'])->group(function () {
+    // controller satu
+    Route::get('/profile', [App\Http\Controllers\ControllerSatu::class, 'profile']);
+
+    Route::get('/tabel', [App\Http\Controllers\ControllerSatu::class, 'tabel'])->name('tabel');
+
+    Route::post('/tabel', [App\Http\Controllers\ControllerSatu::class, 'store']);
+
+    Route::get('/gettabel', [App\Http\Controllers\ControllerSatu::class, 'gettabel']);
+
+    Route::get('/show', [App\Http\Controllers\ControllerSatu::class, 'show']);
+
+    Route::post('/update', [App\Http\Controllers\ControllerSatu::class, 'update']);
+
+    Route::post('/delete', [App\Http\Controllers\ControllerSatu::class, 'delete']);
+
+
+    // controller dua
+    Route::get('/tabel2', [App\Http\Controllers\ControllerDua::class, 'tabel2'])->name('tabel2');
+
+    Route::get('/gettabel2', [App\Http\Controllers\ControllerDua::class, 'gettabel2']);
+
+    Route::post('/tabel2', [App\Http\Controllers\ControllerDua::class, 'store']);
+
+    Route::get('/getupdate', [App\Http\Controllers\ControllerDua::class, 'show']);
+
+    Route::post('/updateData', [App\Http\Controllers\ControllerDua::class, 'update']);
+
+    Route::post('/delete', [App\Http\Controllers\ControllerDua::class, 'delete']);
+
+    Route::get('/restored', [App\Http\Controllers\ControllerDua::class, 'restore']);
+
+    Route::post('/forcedelete', [App\Http\Controllers\ControllerDua::class, 'forcedelete']);
+
+
+    // Controller tiga
+    Route::get('/mahasiswa', [App\Http\Controllers\ControllerTiga::class, 'mahasiswa']);
+
+    Route::get('/get', [App\Http\Controllers\ControllerTiga::class, 'get']);
+
+    Route::post('/store', [App\Http\Controllers\ControllerTiga::class, 'store']);
+    });
