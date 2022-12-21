@@ -79,9 +79,11 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Controller tiga
-    Route::get('/mahasiswa', [App\Http\Controllers\ControllerTiga::class, 'mahasiswa']);
+    Route::get('/mahasiswa', [App\Http\Controllers\ControllerTiga::class, 'mahasiswa'])->name('mahasiswa');
 
     Route::get('/get', [App\Http\Controllers\ControllerTiga::class, 'get']);
 
     Route::post('/store', [App\Http\Controllers\ControllerTiga::class, 'store']);
+
+    Route::post('/delete', [App\Http\Controllers\ControllerTiga::class, 'delete']);
     });

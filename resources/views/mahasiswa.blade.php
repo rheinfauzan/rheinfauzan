@@ -22,68 +22,36 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        
-        {{-- <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body">
-                <div class="row">
-                    <div class="form-group col-3">
-                      <label for="guru_filter">Angkatan</label>
-                      <input type="text" name="guru_filter" class="form-control" id="guru_filter">
-                    </div>
-                    <div class="form-group col-3">
-                      <label for="nip_filter">NIP</label>
-                      <input type="text" name="nip_filter" class="form-control" id="nip_filter">
-                    </div>
-                    <div class="form-group col-3">
-                      <label for="jabatan_filter">Jabatan</label>
-                      <select name="jabatan_filter" id="jabatan_filter" class="form-control" class="form-control" >
-                        <option value=""></option>
-                        <option value="Kepala Sekolah">Kepala Sekolah</option>
-                        <option value="Guru">Guru</option>
-                        <option value="Staff">Staff</option>
-                      </select> 
-                    </div>
+        <div class="row"> 
+          <div class="col-md-12">
+            <!-- DONUT CHART -->
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Donut Chart</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                      <i class="fas fa-times"></i>
+                    </button>
                   </div>
                 </div>
+                <div class="card-body">
+                <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
               </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
             </div>
           </div>
-        </div> --}}
-        <!-- Main content -->
-        <section class="content">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-md-12">
-                <!-- BAR CHART -->
-                <div class="card card-success">
-                  <div class="card-header">
-                    <h3 class="card-title">Bar Chart</h3>
-    
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <div class="chart">
-                      <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                    </div>
-                  </div>
-                  <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-              </div>
-              <!-- /.col (RIGHT) -->
-            </div>
-            <!-- /.row -->
-          </div><!-- /.container-fluid -->
-        </section>
-        <!-- /.content -->
+        </div>
+        <!-- /.col -->
+    </section>
 
-        <div class="row">
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">  
           <div class="col-12">
             <div class="card">
               <div class="card-header">
@@ -96,8 +64,8 @@
                 <table id="tbmahasiswa" class="table table-bordered table-striped" width="100%">
                     <thead>
                       <tr>
-                        <th width="50%" class="text-center">Angkatan</th>
-                        <th width="45%" class="text-center">Jumlah Mahasiswa</th>
+                        <th width="40%" class="text-center">Angkatan</th>
+                        <th width="40%" class="text-center">Jumlah Mahasiswa</th>
                         <th width="7%" class="text-center">Aksi</th>
                       </tr>
                     </thead>
@@ -132,13 +100,13 @@
           <form id="formTambah">
             <div class="form-grub">
               <label for="tahunAngkatan">Tahun Angkatan</label>
-              <input type="date" id="angkatan" name="nama" class="form-control" placeholder="Tahun Angkatan" maxlength="4">
+              <input type="text" id="angkatanAdd" name="nama" class="form-control" placeholder="Tahun Angkatan" maxlength="4">
               <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-title"></div>
             </div>
         <div class="form-grub">
           <label for="jumlahMahasiswa">Jumlah Mahasiswa</label>
-          <input type="text" id="jml_mahasiswa" name="jml_mahasiswa" class="form-control" placeholder="Jumlah Mahasiswa" maxlength="10">
-          <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nim"></div>
+          <input type="text" id="jml_mhsAdd" name="jml_mahasiswa" class="form-control" placeholder="Jumlah Mahasiswa" maxlength="10">
+          <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-jml_mhs"></div>
         </div>
       </form>
           {{-- .form --}}
@@ -189,63 +157,56 @@
 
 @push('scripts')
     <script>
-    $(function() {
-        let jml_mhs = $(this).data('jml_mhs');
-        // Get context with jQuery - using jQuery's .get() method
-        var areaChartData = {
-          labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-          datasets: [
-            {
-              label               : 'Digital Goods',
-              backgroundColor     : 'rgba(60,141,188,0.9)',
-              borderColor         : 'rgba(60,141,188,0.8)',
-              pointRadius          : false,
-              pointColor          : '#3b8bba',
-              pointStrokeColor    : 'rgba(60,141,188,1)',
-              pointHighlightFill  : '#fff',
-              pointHighlightStroke: 'rgba(60,141,188,1)',
-              data                : {
-                    'jml_mhs': jml_mhs,
-              }
-            },
-            {
-              label               : 'Electronics',
-              backgroundColor     : 'rgba(210, 214, 222, 1)',
-              borderColor         : 'rgba(210, 214, 222, 1)',
-              pointRadius         : false,
-              pointColor          : 'rgba(210, 214, 222, 1)',
-              pointStrokeColor    : '#c1c7d1',
-              pointHighlightFill  : '#fff',
-              pointHighlightStroke: 'rgba(220,220,220,1)',
-              data                : [65, 59, 80, 81, 56, 55, 40]
-            },
-          ]
-        }
-
-
-          //-------------
-          //- BAR CHART -
-          //-------------
-          var barChartCanvas = $('#barChart').get(0).getContext('2d')
-          var barChartData = $.extend(true, {}, areaChartData)
-          var temp0 = areaChartData.datasets[0]
-          var temp1 = areaChartData.datasets[1]
-          barChartData.datasets[0] = temp1
-          barChartData.datasets[1] = temp0
-
-          var barChartOptions = {
-            responsive              : true,
-            maintainAspectRatio     : false,
-            datasetFill             : false
+  $(function () {
+    var areaChartOptions = {
+      maintainAspectRatio : false,
+      responsive : true,
+      legend: {
+        display: false
+      },
+      scales: {
+        xAxes: [{
+          gridLines : {
+            display : false,
           }
+        }],
+        yAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }]
+      }
+    }
 
-          new Chart(barChartCanvas, {
-            type: 'bar',
-            data: barChartData,
-            options: barChartOptions
-          })
-          })
-    </script>
+
+
+    //-------------
+    //- DONUT CHART -
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+    var donutData        = {
+      labels: {{ $angkatan }},
+      datasets: [
+        {
+          data: {{ $jml_mhs }},
+          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+        }
+      ]
+    }
+    var donutOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(donutChartCanvas, {
+      type: 'doughnut',
+      data: donutData,
+      options: donutOptions
+    })
+   })
+  </script>
 @endpush
 
 @push('scripts')
@@ -281,6 +242,113 @@
                   ]
         });
 
+
+            //action create post
+    $('#simpanData').click(function(e) {
+        e.preventDefault();
+
+        //define variable
+        let angkatan   = $('#angkatanAdd').val();
+        let jml_mhs = $('#jml_mhsAdd').val();
+        let token   = $("meta[name='csrf-token']").attr("content");
+        
+        //ajax
+        $.ajax({
+
+            url: `store`,
+            type: "POST",
+            cache: false,
+            data: {
+                "angkatan": angkatan,
+                "jml_mhs": jml_mhs,
+                "_token": token,
+            },
+            success:function(response){
+              swal.fire({
+                            type: 'success',
+                            icon: 'success',
+                            title: `${response.message}`,
+                            showConfirmButton: true,
+                            timer: 1500,
+                });
+
+                //clear form
+                $('#angkatanAdd').val('');
+                $('#jml_mhsAdd').val('');
+
+                //close modal
+                $('#tambahDataMahasiswa').modal('hide');
+                mahasiswa.draw();
+            },
+            
+
+            error:function(error){
+
+              if(error.responseJSON.angkatan[0]) {
+                      //show alert
+                      $('#alert-title').removeClass('d-none');
+                      $('#alert-title').addClass('d-block');
+
+                      //add message to alert
+                      $('#alert-title').html(error.responseJSON.angkatan[0]);
+                      } 
+              
+              if(error.responseJSON.jml_mhs[0]) {
+                      //show alert
+                      $('#alert-jml_mhs').removeClass('d-none');
+                      $('#alert-jml_mhs').addClass('d-block');
+
+                      //add message to alert
+                      $('#alert-jml_mhs').html(error.responseJSON.jml_mhs[0]);
+                      }
+            }
+        });
+
+    });
+    // end add
+
+    // delete
+    $('body section table tbody').on('click', '.delete', function(){
+      let post_id = $(this).data('id');
+      let token   = $("meta[name='csrf-token']").attr("content");
+
+      Swal.fire({
+        title: 'Apakah kamu yakin ?',
+        text: 'ingin menghapus data ini!',
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonText: 'TIDAK',
+        confirmButtonText: 'YA!',
+      }).then((result) => {
+        if (result.isConfirmed){
+
+          // fetch to delete
+          $.ajax({
+                url: `/delete`,
+                type: "POST",
+                cache: false,
+                data: {
+                    "id": post_id,
+                    "_token": token,
+                },
+                      success:function(response){
+                          Swal.fire({
+                            type: 'success',
+                            icon: 'success',
+                            title: `${response.message}`,
+                            showConfirmButton: false,
+                            timer: 1500,
+                          });
+
+                          //remove data from table
+                          $(`#index_${post_id}`).remove();
+                          mahasiswa.ajax.reload();
+                      },
+            });
+          }
+        })
+      })
+      // end delete
         
 
 })
