@@ -12,22 +12,18 @@ class ControllerTiga extends Controller
 {
     public function get()
     {
-        $data = MahasiswaModel::select('no_id as id', 'angkatan', 'jml_mhs');
+        
+        $total_mahasiswa = MahasiswaModel::select(DB::raw("CAST(SUM(jml_mhs) as unsigned) as jml_mhs, angkatan"))
+                                         ->groupBy('angkatan')->get();
+        $no_id = MahasiswaModel::select('no_id as id')->get();
+        
 
-
-        return DataTables::of($data->get())
-
-            ->addColumn('aksi', function ($row) {
-                $button = "";
-                $button .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-xs list-inline-item btn-circle delete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
-                
-                return $button;
-            })
+ 
+        return DataTables::of($total_mahasiswa)
             ->editColumn('jml_mhs', function($row) {
                 $jumlah = $row->jml_mhs;
                 return $jumlah." Mahasiswa";
             })
-            ->rawColumns(['aksi'])
             ->make(true);
 
     }
@@ -35,13 +31,25 @@ class ControllerTiga extends Controller
     public function mahasiswa(Request $request)
     {
 
-        $jml_mhs = MahasiswaModel::select(DB::raw("Year(created_at), SUM(jml_mhs) as jml_mhs"))
-                    ->GroupBy("year(created_at)")
-                    ->pluck("jml_mhs");
-        $angkatan = MahasiswaModel::select(DB::raw("angkatan"))
-                    ->pluck("angkatan");
+        $data = MahasiswaModel::select(DB::raw("CAST(SUM(jml_mhs) as unsigned) as jml_mhs, angkatan"))
+                    ->groupBy('angkatan')
+                    ->get();
+                        
+        $jml_mhs = [];
+        $angkatan = [];
 
-        return view('mahasiswa', compact('jml_mhs', 'angkatan'));
+        if (!empty ($data)) {
+            foreach ($data as $index => $value) {
+                $jml_mhs [] = $value->jml_mhs;
+
+                $angkatan [] = $value->angkatan;
+            }
+        };
+
+        
+        // $angkatan = MahasiswaModel::select(DB::raw("angkatan"))
+        //             ->pluck("angkatan");
+        return view('mahasiswa', ['jml_mhs' => $jml_mhs, 'angkatan' => $angkatan]);
     }
 
 

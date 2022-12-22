@@ -33,6 +33,7 @@
               <!-- /.card-header -->
               <div class="card-body">
               <button class="btn btn-success btn-sm list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#tambahData">Tambah</button>
+              <a href="/siswa/export_excel" class="btn btn-sm btn-success my-3" target="_blank">Excel</a>
                <table id="show" class="table table-bordered table-striped" width="100%">
                   <thead>
                     <tr>

@@ -32,13 +32,10 @@
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                       <i class="fas fa-minus"></i>
                     </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                      <i class="fas fa-times"></i>
-                    </button>
                   </div>
                 </div>
                 <div class="card-body">
-                <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                  <canvas id="bar-chart"  height="100"></canvas>
               </div>
               <!-- /.card-body -->
             </div>
@@ -64,9 +61,8 @@
                 <table id="tbmahasiswa" class="table table-bordered table-striped" width="100%">
                     <thead>
                       <tr>
-                        <th width="40%" class="text-center">Angkatan</th>
-                        <th width="40%" class="text-center">Jumlah Mahasiswa</th>
-                        <th width="7%" class="text-center">Aksi</th>
+                        <th width="50%" class="text-center">Angkatan</th>
+                        <th width="50%" class="text-center">Jumlah Mahasiswa</th>
                       </tr>
                     </thead>
                     <tbody id="delete">
@@ -156,56 +152,30 @@
 @endpush
 
 @push('scripts')
-    <script>
-  $(function () {
-    var areaChartOptions = {
-      maintainAspectRatio : false,
-      responsive : true,
-      legend: {
-        display: false
-      },
-      scales: {
-        xAxes: [{
-          gridLines : {
-            display : false,
-          }
-        }],
-        yAxes: [{
-          gridLines : {
-            display : false,
-          }
-        }]
-      }
-    }
-
-
-
-    //-------------
-    //- DONUT CHART -
-    //-------------
-    // Get context with jQuery - using jQuery's .get() method.
-    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
-    var donutData        = {
-      labels: {{ $angkatan }},
+  <script>
+ // Bar chart
+new Chart(document.getElementById("bar-chart"), {
+    type: 'bar',
+    data: {
+      labels: {{ json_encode($angkatan) }},
       datasets: [
         {
-          data: {{ $jml_mhs }},
-          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+          label: "Jumlah Mahasiswa",
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+          data: {{ json_encode($jml_mhs) }}
         }
       ]
+    },
+    options: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: 'Jumlah Mahasiswa '
+      }
     }
-    var donutOptions     = {
-      maintainAspectRatio : false,
-      responsive : true,
-    }
-    //Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
-    new Chart(donutChartCanvas, {
-      type: 'doughnut',
-      data: donutData,
-      options: donutOptions
-    })
-   })
+});
+
+
   </script>
 @endpush
 
@@ -218,139 +188,97 @@
     });
 
     $(document).ready(function() {
-        var mahasiswa = $("#tbmahasiswa").DataTable({
-                  "paging": false,
-                  "lengthChange": true,
-                  "searching": false,
-                  "ordering": true,
-                  "info": true,
-                  "autoWidth": true,
-                  "responsive": true,
-                  "processing": true,
-                  "serverSide": true,
-                  "pageLength": 10,
-                  "ajax": {
-                      url:"/get" 
-                      },
-                  "columns": [       
-                      { "data": "angkatan" },
-                      { "data": "jml_mhs" },
-                      { "data": "aksi"},
-                  ],
-                  "columnDefs": [
-                    { className: "text-center", "targets": [ 0, 1, 2] },
-                  ]
-        });
+      var mahasiswa = $("#tbmahasiswa").DataTable({
+                "paging": false,
+                "lengthChange": true,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
+                "processing": true,
+                "serverSide": true,
+                "pageLength": 10,
+                "ajax": {
+                    url:"get",
+                    },
+                "columns": [       
+                    { "data": "angkatan" },
+                    { "data": "jml_mhs" },
+                ],
+                "columnDefs": [
+                  { className: "text-center", "targets": [ 0, 1] },
+                ]
+      });
 
 
-            //action create post
-    $('#simpanData').click(function(e) {
-        e.preventDefault();
+      //action create post
+      $('#simpanData').click(function(e) {
+          e.preventDefault();
 
-        //define variable
-        let angkatan   = $('#angkatanAdd').val();
-        let jml_mhs = $('#jml_mhsAdd').val();
-        let token   = $("meta[name='csrf-token']").attr("content");
-        
-        //ajax
-        $.ajax({
-
-            url: `store`,
-            type: "POST",
-            cache: false,
-            data: {
-                "angkatan": angkatan,
-                "jml_mhs": jml_mhs,
-                "_token": token,
-            },
-            success:function(response){
-              swal.fire({
-                            type: 'success',
-                            icon: 'success',
-                            title: `${response.message}`,
-                            showConfirmButton: true,
-                            timer: 1500,
-                });
-
-                //clear form
-                $('#angkatanAdd').val('');
-                $('#jml_mhsAdd').val('');
-
-                //close modal
-                $('#tambahDataMahasiswa').modal('hide');
-                mahasiswa.draw();
-            },
-            
-
-            error:function(error){
-
-              if(error.responseJSON.angkatan[0]) {
-                      //show alert
-                      $('#alert-title').removeClass('d-none');
-                      $('#alert-title').addClass('d-block');
-
-                      //add message to alert
-                      $('#alert-title').html(error.responseJSON.angkatan[0]);
-                      } 
-              
-              if(error.responseJSON.jml_mhs[0]) {
-                      //show alert
-                      $('#alert-jml_mhs').removeClass('d-none');
-                      $('#alert-jml_mhs').addClass('d-block');
-
-                      //add message to alert
-                      $('#alert-jml_mhs').html(error.responseJSON.jml_mhs[0]);
-                      }
-            }
-        });
-
-    });
-    // end add
-
-    // delete
-    $('body section table tbody').on('click', '.delete', function(){
-      let post_id = $(this).data('id');
-      let token   = $("meta[name='csrf-token']").attr("content");
-
-      Swal.fire({
-        title: 'Apakah kamu yakin ?',
-        text: 'ingin menghapus data ini!',
-        icon: "warning",
-        showCancelButton: true,
-        cancelButtonText: 'TIDAK',
-        confirmButtonText: 'YA!',
-      }).then((result) => {
-        if (result.isConfirmed){
-
-          // fetch to delete
+          //define variable
+          let angkatan   = $('#angkatanAdd').val();
+          let jml_mhs = $('#jml_mhsAdd').val();
+          let token   = $("meta[name='csrf-token']").attr("content");
+          
+          //ajax
           $.ajax({
-                url: `/delete`,
-                type: "POST",
-                cache: false,
-                data: {
-                    "id": post_id,
-                    "_token": token,
-                },
-                      success:function(response){
-                          Swal.fire({
-                            type: 'success',
-                            icon: 'success',
-                            title: `${response.message}`,
-                            showConfirmButton: false,
-                            timer: 1500,
-                          });
 
-                          //remove data from table
-                          $(`#index_${post_id}`).remove();
-                          mahasiswa.ajax.reload();
-                      },
-            });
-          }
-        })
-      })
-      // end delete
-        
+              url: `store`,
+              type: "POST",
+              cache: false,
+              data: {
+                  "angkatan": angkatan,
+                  "jml_mhs": jml_mhs,
+                  "_token": token,
+              },
+              success:function(response){
+                swal.fire({
+                              type: 'success',
+                              icon: 'success',
+                              title: `${response.message}`,
+                              showConfirmButton: true,
+                              timer: 1500,
+                  });
 
-})
+                  //clear form
+                  $('#angkatanAdd').val('');
+                  $('#jml_mhsAdd').val('');
+
+                  //close modal
+                  $('#tambahDataMahasiswa').modal('hide');
+                  location.reload(true); 
+              },
+              
+
+              error:function(error){
+
+                if(error.responseJSON.angkatan[0]) {
+                        //show alert
+                        $('#alert-title').removeClass('d-none');
+                        $('#alert-title').addClass('d-block');
+
+                        //add message to alert
+                        $('#alert-title').html(error.responseJSON.angkatan[0]);
+                        } 
+                
+                if(error.responseJSON.jml_mhs[0]) {
+                        //show alert
+                        $('#alert-jml_mhs').removeClass('d-none');
+                        $('#alert-jml_mhs').addClass('d-block');
+
+                        //add message to alert
+                        $('#alert-jml_mhs').html(error.responseJSON.jml_mhs[0]);
+                        }
+              }
+          });
+
+      });
+      // end add
+
+
+
+ 
+    })
 </script>
 @endpush
