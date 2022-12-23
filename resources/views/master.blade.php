@@ -131,7 +131,7 @@
           </a>
           <div class="dropdown-divider"></div>
           <a href="{{ url('signout') }}" class="dropdown-item">
-          Sign Out
+          Log Out
           </a>
         </div>
       </li>
