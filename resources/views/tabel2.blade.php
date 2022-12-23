@@ -62,10 +62,11 @@
               <!-- /.card-header -->
               <div class="card-body">
                 <button class="btn btn-success btn-xs list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#tambahDataGuru">Tambah</button>
+                <a href="{{ url('export_excel') }}" class="btn btn-xs btn-info my-3" target="_blank">Excel</a>
+                <a href="{{ url('export_pdf') }}" class="btn btn-xs btn-info my-3" target="_blank">Pdf</a>
                 <table id="showGuru" class="table table-bordered table-striped" width="100%">
                     <thead>
                       <tr>
-
                         <th width="30%" class="text-center">Nama Guru</th>
                         <th width="20%" class="text-center">NIP Guru</th>
                         <th width="30" class="text-center">Jabatan</th>

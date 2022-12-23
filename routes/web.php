@@ -33,16 +33,6 @@ Route::get('signout', [App\Http\Controllers\LoginController::class, 'logout']);
 
 
 
-
-// // controller forgot
-// Route::get('forgotpassword', [App\Http\Controllers\ControllerForgotPassword::class, 'forgotPassword']);
-
-// Route::post('submitforgotpassword', [App\Http\Controllers\ControllerForgotPassword::class, 'submitForgotPassword']);
-
-// Route::get('resetpassword', [App\Http\Controllers\ControllerForgotPassword::class, 'resetPassword']);
-
-// Route::post('submitforgotpassword', [App\Http\Controllers\ControllerForgotPassword::class, 'submitForgotPassword']);
-
 Route::middleware(['auth'])->group(function () {
     // controller satu
     Route::get('/profile', [App\Http\Controllers\ControllerSatu::class, 'profile']);
@@ -86,4 +76,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/store', [App\Http\Controllers\ControllerTiga::class, 'store']);
 
     Route::post('/delete', [App\Http\Controllers\ControllerTiga::class, 'delete']);
+
+    // Controller Export
+    Route::get('/export_excel', [App\Http\Controllers\ControllerExport::class, 'export_excel']);
+
+    Route::get('/export_pdf', [App\Http\Controllers\ControllerExport::class, 'export_pdf']);
     });

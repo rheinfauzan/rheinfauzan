@@ -194,6 +194,10 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        // Maatwebsite excel
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        // Pdf
+        Barryvdh\DomPDF\ServiceProvider::class,
 
     ],
 
@@ -209,6 +213,10 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
+        'PDF' => Barryvdh\DomPDF\Facade::class,
+
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
