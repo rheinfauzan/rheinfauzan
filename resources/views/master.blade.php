@@ -126,14 +126,17 @@
           </i>My Profile
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-          </i>Settings
+          <a href="{{ url('changepassword') }}" class="dropdown-item">
+          </i>Change Password
           </a>
           <div class="dropdown-divider"></div>
           <a href="{{ url('signout') }}" class="dropdown-item">
           Log Out
           </a>
         </div>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">{{ auth()->user()->name }}</a>
       </li>
       
 

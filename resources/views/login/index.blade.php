@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input id="passwordLogin" type="password" class="form-control" placeholder="Password">
+          <input id="passwordLogin" type="text" class="form-control" placeholder="Password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -73,9 +73,6 @@
       </div> --}}
       <!-- /.social-auth-links -->
 
-      <p class="mb-1">
-        <a href="{{ url('forgotpassword') }}">I forgot my password</a>
-      </p>
       <p class="mb-0">
         <a href="{{ url('register') }}" class="text-center">Register a new membership</a>
       </p>
@@ -94,6 +91,7 @@
 <script src="/dist/js/adminlte.min.js"></script>
 <!-- SweetAlert2 -->
 <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
+
 
 <script>
   $(document).ready(function() {
@@ -140,7 +138,7 @@
                                     type: 'success',
                                     icon: 'success',
                                     title: 'Login Berhasil!',
-                                    timer: 3000,
+                                    timer: 1000,
                                     showCancelButton: false,
                                     showConfirmButton: false
                                 })

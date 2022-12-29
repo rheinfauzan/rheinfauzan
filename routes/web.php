@@ -31,6 +31,13 @@ Route::post('register-store', [App\Http\Controllers\RegisterController::class, '
 
 Route::get('signout', [App\Http\Controllers\LoginController::class, 'logout']);
 
+Route::middleware(['auth'])->group(function () {
+// ganti password
+Route::get('changepassword', [App\Http\Controllers\ForgotPassword::class, 'changepassword']);
+Route::post('changepassword', [App\Http\Controllers\ForgotPassword::class, 'storepassword'])->name('postChangePassword');
+
+});
+
 
 
 Route::middleware(['auth'])->group(function () {
