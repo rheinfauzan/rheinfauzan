@@ -85,7 +85,7 @@ class ControllerDua extends Controller
     {
         //return response
         $showtabel = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan')->where('id', $request->id)->first();
-        // dd($nama);
+
         return response()->json([
             'success' => true,
             'message' => 'Detail Data Post',

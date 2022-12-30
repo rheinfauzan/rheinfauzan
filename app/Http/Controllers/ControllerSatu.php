@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\MahasiswaModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -13,12 +14,9 @@ use Illuminate\Support\Facades\Cache;
 
 class ControllerSatu extends Controller
 {
-    public function profile(){
-        return view('profile');
-    }
 
     public function tabel(){
-            return view('tabel');
+        return view('tabel');
     }
 
     public function gettabel(Request $request){

@@ -12,7 +12,8 @@ use PDF;
 class ControllerExport extends Controller
 {
     public function export_excel()
-	{		
+	{	
+		
 		$filename = urlencode("guru-".date("d-m-Y").".xlsx");
 		$data = Excel::download(new GuruExport, $filename);
 		return $data;

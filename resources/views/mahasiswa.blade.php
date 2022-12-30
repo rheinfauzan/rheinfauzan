@@ -20,33 +20,7 @@
     </section>
 
     <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row"> 
-          <div class="col-md-12">
-            <!-- DONUT CHART -->
-            <div class="card card-danger">
-              <div class="card-header">
-                <h3 class="card-title">Donut Chart</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                      <i class="fas fa-minus"></i>
-                    </button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <canvas id="bar-chart"  height="100"></canvas>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-            </div>
-          </div>
-        </div>
-        <!-- /.col -->
-    </section>
-
-    <section class="content">
+   <section class="content">
       <div class="container-fluid">
         <div class="row">  
           <div class="col-12">
@@ -149,34 +123,6 @@
   <script src="/plugins/inputmask/inputmask.js"></script>
   <!-- ChartJS -->
   <script src="/plugins/chart.js/Chart.min.js"></script>
-@endpush
-
-@push('scripts')
-  <script>
- // Bar chart
-new Chart(document.getElementById("bar-chart"), {
-    type: 'bar',
-    data: {
-      labels: {{ json_encode($angkatan) }},
-      datasets: [
-        {
-          label: "Jumlah Mahasiswa",
-          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-          data: {{ json_encode($jml_mhs) }}
-        }
-      ]
-    },
-    options: {
-      legend: { display: false },
-      title: {
-        display: true,
-        text: 'Jumlah Mahasiswa '
-      }
-    }
-});
-
-
-  </script>
 @endpush
 
 @push('scripts')

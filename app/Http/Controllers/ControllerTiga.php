@@ -30,26 +30,7 @@ class ControllerTiga extends Controller
 
     public function mahasiswa(Request $request)
     {
-
-        $data = MahasiswaModel::select(DB::raw("CAST(SUM(jml_mhs) as unsigned) as jml_mhs, angkatan"))
-                    ->groupBy('angkatan')
-                    ->get();
-                        
-        $jml_mhs = [];
-        $angkatan = [];
-
-        if (!empty ($data)) {
-            foreach ($data as $index => $value) {
-                $jml_mhs [] = $value->jml_mhs;
-
-                $angkatan [] = $value->angkatan;
-            }
-        };
-
-        
-        // $angkatan = MahasiswaModel::select(DB::raw("angkatan"))
-        //             ->pluck("angkatan");
-        return view('mahasiswa', ['jml_mhs' => $jml_mhs, 'angkatan' => $angkatan]);
+        return view('mahasiswa');
     }
 
 

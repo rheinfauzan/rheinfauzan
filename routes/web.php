@@ -40,9 +40,13 @@ Route::post('changepassword', [App\Http\Controllers\ForgotPassword::class, 'stor
 
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function () {    
+    // chart controller
+    Route::get('/profile', [App\Http\Controllers\ChartController::class, 'profile']);
+
+    Route::get('/getcard', [App\Http\Controllers\ChartController::class, 'card']);
+
     // controller satu
-    Route::get('/profile', [App\Http\Controllers\ControllerSatu::class, 'profile']);
 
     Route::get('/tabel', [App\Http\Controllers\ControllerSatu::class, 'tabel'])->name('tabel');
 
