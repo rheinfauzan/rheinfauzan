@@ -54,16 +54,4 @@ class ControllerTiga extends Controller
         };     
     }
 
-
-    public function delete(Request $request) 
-    {
-            $deleted = MahasiswaModel::where('no_id', $request->id);
-            $deleted = $deleted->forceDelete();
-    
-            return response()->json([
-                'success' => true,
-                'message' => 'Data Berhasil Dihapus!',
-            ]);
-    }
-
 }

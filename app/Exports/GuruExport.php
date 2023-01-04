@@ -37,7 +37,6 @@ class GuruExport implements WithEvents
 
                 $data = Post::select('nama_guru', 'nip_guru', 'jabatan')->get();
                 
-   
 
                 // Set cell A1 with Your Title
                 $event->sheet->setCellValue('A1', 'Nama Guru');
@@ -55,10 +54,17 @@ class GuruExport implements WithEvents
                     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                     ->getStartColor()->setARGB('FF17a2b8');
 
+                // size column
+                $event->sheet->getColumnDimension('A')->setAutoSize(true);
+                $event->sheet->getColumnDimension('B')->setAutoSize(true);
+                $event->sheet->getColumnDimension('C')->setAutoSize(true);
 
+                // get data
                 $i = 2;
                 foreach ($data as $key => $value) {
                     $event->sheet->setCellValue('A'.$i, $value->nama_guru);
+                    $event->sheet->setCellValue('B'.$i, $value->nip_guru);
+                    $event->sheet->setCellValue('C'.$i, $value->jabatan);
                     $i++;
                 };
 

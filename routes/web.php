@@ -31,16 +31,13 @@ Route::post('register-store', [App\Http\Controllers\RegisterController::class, '
 
 Route::get('signout', [App\Http\Controllers\LoginController::class, 'logout']);
 
-Route::middleware(['auth'])->group(function () {
-// ganti password
-Route::get('changepassword', [App\Http\Controllers\ForgotPassword::class, 'changepassword']);
-Route::post('changepassword', [App\Http\Controllers\ForgotPassword::class, 'storepassword'])->name('postChangePassword');
-
-});
-
-
 
 Route::middleware(['auth'])->group(function () {    
+
+    // ganti password
+    Route::get('changepassword', [App\Http\Controllers\ForgotPassword::class, 'changepassword']);
+    Route::post('changepassword', [App\Http\Controllers\ForgotPassword::class, 'storepassword'])->name('postChangePassword');
+
     // chart controller
     Route::get('/profile', [App\Http\Controllers\ChartController::class, 'profile']);
 
@@ -86,7 +83,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/store', [App\Http\Controllers\ControllerTiga::class, 'store']);
 
-    Route::post('/delete', [App\Http\Controllers\ControllerTiga::class, 'delete']);
 
     // Controller Export
     Route::get('/export_excel', [App\Http\Controllers\ControllerExport::class, 'export_excel']);

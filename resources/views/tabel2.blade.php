@@ -28,29 +28,38 @@
             <div class="card">
               <div class="card-body">
                 <div class="row">
-                    <div class="form-group col-3">
+                    <div class="form-group col-md-2">
                       <label for="guru_filter">Nama</label>
                       <input type="text" name="guru_filter" class="form-control" id="guru_filter">
                     </div>
-                    <div class="form-group col-3">
+                    <div class="form-group col-md-2">
                       <label for="nip_filter">NIP</label>
                       <input type="text" name="nip_filter" class="form-control" id="nip_filter">
                     </div>
-                    <div class="form-group col-3">
+                    <div class="form-group col-md-2">
                       <label for="jabatan_filter">Jabatan</label>
-                      <select name="jabatan_filter" id="jabatan_filter" class="form-control" class="form-control" >
+                      <select name="jabatan_filter" id="jabatan_filter" class="form-control">
                         <option value=""></option>
                         <option value="Kepala Sekolah">Kepala Sekolah</option>
                         <option value="Guru">Guru</option>
                         <option value="Staff">Staff</option>
                       </select> 
+                    </div>    
+                      <div class="col-sm-2 col-md-2">        
+                        <div class="form-group">          
+                          <label for="tanggal-mulai">Tanggal Mulai</label>               
+                           <input id="tanggal-mulai" type="date" name="tanggal-mulai" class="form-control">        
+                        </div>      
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="tanggal-selesai">Tanggal Selesai</label>
+                      <input id="tanggal-selesai" type="date" name="tanggal-selesai" class="form-control" >
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
         <div class="row">
           <div class="col-12">
@@ -230,6 +239,8 @@
                             data.guru = $('#guru_filter').val();
                             data.nip = $('#nip_filter').val();
                             data.jabatan = $('#jabatan_filter').val();
+                            data.tanggal_mulai = $('#tanggal-mulai').val();
+                            data.tanggal_selesai = $('#tanggal-selesai').val();
                           },
                       },
                   "columns": [       
@@ -517,6 +528,14 @@
         })
 
         $('#jabatan_filter').on('click', function(){
+          data.draw();
+        })
+
+        $('#tanggal-mulai').on('change', function(){
+          data.draw();
+        })
+
+        $('#tanggal-selesai').on('change', function(){
           data.draw();
         })
     // end filter

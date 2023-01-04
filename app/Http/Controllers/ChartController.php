@@ -35,7 +35,7 @@ class ChartController extends Controller
                 $card_mhs = $value->card_mhs;
             }
         }
-    
+                    
         return view('profile', ['card_mhs'=>$card_mhs], ['jml_mhs' => $jml_mhs, 'angkatan' => $angkatan]);
     }
 }

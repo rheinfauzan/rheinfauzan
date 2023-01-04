@@ -20,7 +20,8 @@ class ControllerExport extends Controller
 	}
 
     public function export_pdf()
-	{
+	{	
+		// $date = Post::select('created_at')->get();
 	    $guru = Post::all();
 		$filename = urlencode("guru-".date("d-m-Y").".pdf");
 

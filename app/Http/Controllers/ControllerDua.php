@@ -33,7 +33,19 @@ class ControllerDua extends Controller
             $guru->where('jabatan', 'like', $request->jabatan);
         }
 
+        // $tgl_mulai = date('Y-m-d',strtotime($request->tanggal_mulai));
+        // $tgl_selesai = date('Y-m-d',strtotime($request->tanggal_selesai));
+        
+        // $bm = Post::whereBetween('created_at',[$tgl_mulai,$tgl_selesai])->get();
+        // dd($bm);
+        
+        // if (!empty([$tgl_mulai,$tgl_selesai])) {
+  
+        // }
 
+        if (!empty($request->tanggal_mulai)) {
+            $guru->where('created_at', 'like', $request->tanggal_mulai.'%');
+        }
         
 
         return DataTables::of($guru->withTrashed())
@@ -73,7 +85,7 @@ class ControllerDua extends Controller
             //return response
             return response()->json([
                 'success' => true,
-                'message' => 'Data Post Berhasil Dihapus!',
+                'message' => 'Data Post Berhasil Disimpan!',
         ]);
         };
 

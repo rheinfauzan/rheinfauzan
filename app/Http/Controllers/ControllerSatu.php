@@ -115,7 +115,7 @@ class ControllerSatu extends Controller
 
     return response()->json([
         'success' => true,
-        'message' => 'Data Post Berhasil Dihapus!',
+        'message' => 'Data Post Berhasil Dihapus!?',
     ]); 
     }
 
