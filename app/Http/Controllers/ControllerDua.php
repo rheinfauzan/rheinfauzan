@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
-
+use Barryvdh\DomPDF\Facade;
+use PDF;    
 
 class ControllerDua extends Controller
 {
@@ -18,8 +19,13 @@ class ControllerDua extends Controller
 
     public function gettabel2(Request $request)
     {
-      
-        $guru = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan', 'deleted_at');
+        $tgl_mulai = date('Y-m-d',strtotime($request->tanggal_mulai));
+        $tgl_selesai = date('Y-m-d',strtotime($request->tanggal_selesai));
+        
+        $guru = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan', 'created_at','deleted_at')
+                ->whereDate('created_at', '>=', $tgl_mulai)
+                ->whereDate('created_at', '<=', $tgl_selesai);
+        
         
         if (!empty( $request->guru)) {
             $guru->where('nama_guru', 'like', '%'.$request->guru.'%');
@@ -33,22 +39,8 @@ class ControllerDua extends Controller
             $guru->where('jabatan', 'like', $request->jabatan);
         }
 
-        // $tgl_mulai = date('Y-m-d',strtotime($request->tanggal_mulai));
-        // $tgl_selesai = date('Y-m-d',strtotime($request->tanggal_selesai));
         
-        // $bm = Post::whereBetween('created_at',[$tgl_mulai,$tgl_selesai])->get();
-        // dd($bm);
-        
-        // if (!empty([$tgl_mulai,$tgl_selesai])) {
-  
-        // }
-
-        if (!empty($request->tanggal_mulai)) {
-            $guru->where('created_at', 'like', $request->tanggal_mulai.'%');
-        }
-        
-
-        return DataTables::of($guru->withTrashed())
+          return DataTables::of($guru->get())
             ->addColumn('action', function($row){
                 $button = '';  
                 
