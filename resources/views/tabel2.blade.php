@@ -72,7 +72,7 @@
               <div class="card-body">
                 <button class="btn btn-success btn-xs list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#tambahDataGuru">Tambah</button>
                 <a href="{{ url('export_excel') }}" class="btn btn-xs btn-info my-3" target="_blank">Excel</a>
-                <a href="{{ url('export_pdf') }}" class="btn btn-xs btn-info my-3" target="_blank">Pdf</a>
+                <a href="{{ url('export_pdf') }}" id="exportpdf" class="btn btn-xs btn-info my-3" target="_blank">Pdf</a>
                 <table id="showGuru" class="table table-bordered table-striped" width="100%">
                     <thead>
                       <tr>
@@ -539,7 +539,24 @@
           data.draw();
         })
     // end filter
+    $('#exportpdf').change(function(e) {
+            e.preventDefault();
 
+            //define variable
+            let tglmulai   = $('#tanggal-mulai').val();
+            let tglselesai = $('#tanggal-selesai').val();
+            
+            //ajax
+            $.ajax({
+                url: `export_pdf`,
+                type: "GET",
+                data: {
+                    "tgl_mulai": tglmulai,
+                    "tgl_selesai": tglselesai,
+                }
+            });
+
+        });
   })
 </script>
 @endpush

@@ -19,14 +19,22 @@ class ControllerDua extends Controller
 
     public function gettabel2(Request $request)
     {
-        $tgl_mulai = date('Y-m-d',strtotime($request->tanggal_mulai));
-        $tgl_selesai = date('Y-m-d',strtotime($request->tanggal_selesai));
+        $guru = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan', 'created_at','deleted_at');
         
-        $guru = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan', 'created_at','deleted_at')
-                ->whereDate('created_at', '>=', $tgl_mulai)
-                ->whereDate('created_at', '<=', $tgl_selesai);
-        
-        
+        if ($request->tanggal_mulai == null) {
+            
+            $guru->select('id', 'nama_guru', 'nip_guru', 'jabatan', 'created_at','deleted_at');
+
+        } else if (!empty($request->tanggal_mulai)) {
+            
+            $tgl_mulai = date('Y-m-d',strtotime($request->tanggal_mulai));
+            $tgl_selesai = date('Y-m-d',strtotime($request->tanggal_selesai));
+
+                    $guru->whereDate('created_at', '>=', $tgl_mulai);
+                    $guru->whereDate('created_at', '<=', $tgl_selesai);
+
+        }
+
         if (!empty( $request->guru)) {
             $guru->where('nama_guru', 'like', '%'.$request->guru.'%');
         } 
@@ -40,7 +48,7 @@ class ControllerDua extends Controller
         }
 
         
-          return DataTables::of($guru->get())
+          return (DataTables::of($guru->get())
             ->addColumn('action', function($row){
                 $button = '';  
                 
@@ -57,7 +65,7 @@ class ControllerDua extends Controller
                 
                 })
             ->rawColumns(['action'])
-            ->make(true);
+            ->make(true)); 
     }
 
     public function store(Request $request)

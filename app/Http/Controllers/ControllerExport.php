@@ -22,17 +22,21 @@ class ControllerExport extends Controller
     public function export_pdf(Request $request)
 	{	
 
-		$tgl_mulai = date('Y-m-d',strtotime($request->tanggal_mulai));
-		$tgl_selesai = date('Y-m-d',strtotime($request->tanggal_selesai));
-		dd($tgl_mulai);
-		$guru = Post::select('nama_guru', 'nip_guru', 'jabatan', 'created_at')
-				->whereDate('created_at', '>=', $tgl_mulai)
-				->whereDate('created_at', '<=', $tgl_selesai)
-				->get();
+		$tglmulai = date('Y-m-d',strtotime($request->tgl_mulai));
+		$tglselesai = date('Y-m-d',strtotime($request->tgl_selesai));
 
+		dd($tglmulai);
+
+		$getguru = Post::select('nama_guru', 'nip_guru', 'jabatan')
+			->whereDate('created_at', '>=', $tglmulai)
+			->whereDate('created_at', '<=', $tglselesai)
+			->get();
+
+		// dd($getguru);
+		// dd([$tglmulai, $tglselesai]);
 		$filename = urlencode("guru-".date("d-m-Y").".pdf");
 
-        $pdf = PDF::loadview('guru',['guru'=>$guru]);
+        $pdf = PDF::loadview('guru',['guru'=>$getguru]);
         return $pdf->download($filename);
 	}
 }
