@@ -227,15 +227,15 @@
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
               <p>
-                Daftar Hadir
+                Kurikulum
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a> 
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ url('tabel') }}" class="nav-link">
+                <a href="{{ url('sks') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Siswa</p>
+                  <p>SKS</p>
                 </a>
               </li>
             </ul>

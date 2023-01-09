@@ -88,4 +88,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/export_excel', [App\Http\Controllers\ControllerExport::class, 'export_excel']);
 
     Route::get('/export_pdf', [App\Http\Controllers\ControllerExport::class, 'export_pdf']);
+
+    // SKS 
+    Route::get('/sks', [App\Http\Controllers\SksController::class, 'index'])->name('sks');
+
+    Route::get('/skstabel', [App\Http\Controllers\SksController::class, 'skstabel']);
+
+    Route::post('/addsks', [App\Http\Controllers\SksController::class, 'addsks']);
     });

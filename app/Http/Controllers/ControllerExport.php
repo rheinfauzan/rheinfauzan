@@ -25,7 +25,7 @@ class ControllerExport extends Controller
 		$tglmulai = date('Y-m-d',strtotime($request->tgl_mulai));
 		$tglselesai = date('Y-m-d',strtotime($request->tgl_selesai));
 
-		dd($tglmulai);
+		// dd($tglmulai);
 
 		$getguru = Post::select('nama_guru', 'nip_guru', 'jabatan')
 			->whereDate('created_at', '>=', $tglmulai)

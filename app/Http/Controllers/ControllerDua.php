@@ -13,25 +13,24 @@ use PDF;
 class ControllerDua extends Controller
 {
     public function tabel2()
-    {
-        return view('tabel2');
+    {   
+        $skstabel = DB::table('tb_sks')->select('id', 'sks', 'nm_matkul')->get();
+        // dd($skstabel);
+        return view('tabel2', ['skstabels' =>  $skstabel]);
     }
 
     public function gettabel2(Request $request)
     {
-        $guru = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan', 'created_at','deleted_at');
+        $guru = Post::select('guru1.id', 'nama_guru', 'nip_guru', 'jabatan', 't_sks.sks', 't_sks.nm_matkul', 'guru1.created_at', 'guru1.deleted_at')->leftJoin('tb_sks as t_sks', 'guru1.sks_id', '=', 't_sks.id');
+        // dd($guru);
         
-        if ($request->tanggal_mulai == null) {
-            
-            $guru->select('id', 'nama_guru', 'nip_guru', 'jabatan', 'created_at','deleted_at');
-
-        } else if (!empty($request->tanggal_mulai)) {
+        if ($request->tanggal_mulai != null) {
             
             $tgl_mulai = date('Y-m-d',strtotime($request->tanggal_mulai));
             $tgl_selesai = date('Y-m-d',strtotime($request->tanggal_selesai));
 
-                    $guru->whereDate('created_at', '>=', $tgl_mulai);
-                    $guru->whereDate('created_at', '<=', $tgl_selesai);
+                    $guru->whereDate('guru1.created_at', '>=', $tgl_mulai);
+                    $guru->whereDate('guru1.created_at', '<=', $tgl_selesai);
 
         }
 
@@ -72,8 +71,8 @@ class ControllerDua extends Controller
     {
         //define validation rules
         $validator = Validator::make($request->all(), [
-            'nama'     => 'required',
-            'nip'   => 'required|numeric',
+            'nama'      => 'required',
+            'nip'       => 'required|numeric',
             'jabatan'   => 'required',
         ]);
 
@@ -81,6 +80,7 @@ class ControllerDua extends Controller
         $guru->nama_guru = $request->nama;
         $guru->nip_guru = $request->nip;
         $guru->jabatan = $request->jabatan;
+        $guru->sks_id = $request->matkul;
         if($guru->save()){
             //return response
             return response()->json([

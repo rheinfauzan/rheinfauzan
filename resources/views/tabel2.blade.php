@@ -78,11 +78,14 @@
                       <tr>
                         <th width="30%" class="text-center">Nama Guru</th>
                         <th width="20%" class="text-center">NIP Guru</th>
-                        <th width="30" class="text-center">Jabatan</th>
+                        <th width="auto" class="text-center">Jabatan</th>
+                        <th width="auto" class="text-center">Kode Mata Kuliah</th>
+                        <th width="auto" class="text-center">Mata Kuliah</th>
                         <th width="20%" class="text-left">Action</th>
                       </tr>
                     </thead>
                     <tbody id="delete">
+
                     </tbody>
                   </table>
               </div>
@@ -124,10 +127,19 @@
             </div>
             <div class="form-grub">
               <label for="jabatan">Jabatan</label>
-              <select name="nip" id="tambahJabatan" class="form-control" >
+              <select name="jabatan" id="tambahJabatan" class="form-control" >
                 <option value="Kepala Sekolah">Kepala Sekolah</option>
                 <option value="Guru">Guru</option>
                 <option value="Staff">Staff</option>
+              </select>
+              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-jabatan"></div>
+            </div>
+            <div class="form-grub">
+              <label for="matkul">Kode Mata Kuliah</label>
+              <select name="matkul" id="tambahSks" class="form-control" >
+                  @foreach ($skstabels as $skstabel)
+                    <option value="{{ $skstabel->id }}">{{$skstabel->sks}}</option>
+                  @endforeach
               </select>
               <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-jabatan"></div>
             </div>
@@ -173,6 +185,15 @@
                 <option value="Kepala Sekolah">Kepala Sekolah</option>
                 <option value="Guru">Guru</option>
                 <option value="Staff">Staff</option>
+              </select>
+              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-jabatan"></div>
+            </div>
+            <div class="form-grub">
+              <label for="matkul">Kode Mata Kuliah</label>
+              <select name="matkul" id="editSks" class="form-control" >
+                  @foreach ($skstabels as $skstabel)
+                    <option value="{{ $skstabel->id }}">{{$skstabel->sks}}</option>
+                  @endforeach
               </select>
               <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-jabatan"></div>
             </div>
@@ -247,10 +268,12 @@
                       { "data": "nama_guru" },
                       { "data": "nip_guru" },
                       { "data": "jabatan" },
+                      { "data": "sks"},
+                      { "data": "nm_matkul" },
                       { "data": "action" },                   
                   ],
                   "columnDefs": [
-                    { className: "text-center", "targets": [ 3 ] },
+                    { className: "text-center", "targets": [ 5 ] },
                   ]
         });
       // end get
@@ -263,6 +286,7 @@
             let nama   = $('#tambahGuru').val();
             let nip = $('#tambahNip').val();
             let jabatan = $('#tambahJabatan').val();
+            let matkul = $('#tambahSks').val();
             let token   = $("meta[name='csrf-token']").attr("content");
             
             //ajax
@@ -274,6 +298,7 @@
                     "nama": nama,
                     "nip": nip,
                     "jabatan": jabatan,
+                    "matkul": matkul,
                     "_token": token,
                 },
                 success:function(response){
@@ -289,6 +314,7 @@
                     $('#tambahGuru').val('');
                     $('#tambahNip').val('');
                     $('#tambahJabatan').val('');
+                    $('#tambahSks').val('');
 
                     //close modal
                     $('#tambahDataGuru').modal('hide');
@@ -339,6 +365,7 @@
                     $('#editNama').val(response.data.nama_guru);
                     $('#editNip').val(response.data.nip_guru);
                     $('#editJabatan').val(response.data.jabatan);
+                    $('#editSks').val(response.data.matkul);
                 },
             })
           })
@@ -352,6 +379,7 @@
             let nama   = $('#editNama').val();
             let nip = $('#editNip').val();
             let jabatan = $('#editJabatan').val();
+            let editmatkul = $('#editSks').val();
             let token   = $("meta[name='csrf-token']").attr("content");
             
             //ajax
@@ -365,6 +393,7 @@
                     "nama": nama,
                     "nip": nip,
                     "jabatan": jabatan,
+                    "editmatkul": editmatkul,
                     "_token": token,
                 },
                 success:function(response){
@@ -380,6 +409,7 @@
                     $('#editNama').val('');
                     $('#editNip').val('');
                     $('#editJabatan').val('');
+                    $('#editSks').val('');
 
                     // hide modal
                     $('#editData').modal('hide');
