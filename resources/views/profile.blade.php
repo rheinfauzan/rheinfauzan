@@ -37,20 +37,20 @@
           </div>
           <div class="col-lg-3 col-6">
             {{-- jumlah mahasiswa --}}
-            <div class="small-box bg-info">
+            <div class="small-box bg-success">
               <div class="inner">
-                <h3></h3>
-                <p>New Orders</p>
+                <h3>{{ $jmlgurus }}</h3>
+                <p>Jumlah Dosen</p>
               </div>
               <div class="icon">
-                <i class="ion ion-stats-bars"></i>
+                <i class="ion ion-person-add"></i>
               </div>
               <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>  
           </div>
           <div class="col-lg-3 col-6">
             {{-- jumlah mahasiswa --}}
-            <div class="small-box bg-success">
+            <div class="small-box bg-danger">
               <div class="inner">
                 <h3>150</h3>
                 <p>New Orders</p>

@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
-use Barryvdh\DomPDF\Facade;
-use PDF;    
+use Carbon\Carbon;
 
 class ControllerDua extends Controller
 {
@@ -24,7 +23,7 @@ class ControllerDua extends Controller
         $guru = Post::select('guru1.id', 'nama_guru', 'nip_guru', 'jabatan', 't_sks.sks', 't_sks.nm_matkul', 'guru1.created_at', 'guru1.deleted_at')->leftJoin('tb_sks as t_sks', 'guru1.sks_id', '=', 't_sks.id');
         // dd($guru);
         
-        if ($request->tanggal_mulai != null) {
+        if ($request->tanggal_mulai != null || $request->tanggal_selesai != null) {
             
             $tgl_mulai = date('Y-m-d',strtotime($request->tanggal_mulai));
             $tgl_selesai = date('Y-m-d',strtotime($request->tanggal_selesai));
@@ -74,13 +73,24 @@ class ControllerDua extends Controller
             'nama'      => 'required',
             'nip'       => 'required|numeric',
             'jabatan'   => 'required',
+            'matkul'    => 'required',
         ]);
+
+        if ($validator->fails()) {
+            return response()
+            ->json([
+                'status' => false,
+                'message' => 'Validasi gagal.',
+                'data' => $validator->messages(),
+            ]);
+        }
 
         $guru = new Post();
         $guru->nama_guru = $request->nama;
         $guru->nip_guru = $request->nip;
         $guru->jabatan = $request->jabatan;
         $guru->sks_id = $request->matkul;
+
         if($guru->save()){
             //return response
             return response()->json([
@@ -96,7 +106,7 @@ class ControllerDua extends Controller
     public function show(Request $request)
     {
         //return response
-        $showtabel = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan')->where('id', $request->id)->first();
+        $showtabel = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan', 'sks_id')->where('guru1.id', $request->id)->first();
 
         return response()->json([
             'success' => true,
@@ -110,9 +120,10 @@ class ControllerDua extends Controller
     {
         //define validation rules
         $validator = Validator::make($request->all(), [
-            'nama'     => 'required',
-            'nip'   => 'required|numeric',
+            'nama'      => 'required',
+            'nip'       => 'required|numeric',
             'jabatan'   => 'required',
+            'editmatkul'    => 'required',
         ]);
 
         //check if validation fails
@@ -124,8 +135,9 @@ class ControllerDua extends Controller
         Post::where('id', $request->id)
         ->update([
         'nama_guru' => $request->nama, 
-        'nip_guru'   => $request->nip,
-        'jabatan' => $request->jabatan,
+        'nip_guru'  => $request->nip,
+        'jabatan'   => $request->jabatan,
+        'sks_id' => $request->editmatkul,
         ]);
 
         //return response
@@ -138,7 +150,7 @@ class ControllerDua extends Controller
     // delete
     public function delete(Request $request)
     {
-        $deleted = Post::where('id', $request->id);
+        $deleted = Post::where('guru1.id', $request->id);
         $deleted = $deleted->delete();
 
         return response()->json([
@@ -149,7 +161,7 @@ class ControllerDua extends Controller
 
     public function restore(Request $request)
     { 
-        $restore = Post::where('id', $request->id);
+        $restore = Post::where('guru1.id', $request->id);
         $restore->restore();
 
         return response()->json([
@@ -160,7 +172,7 @@ class ControllerDua extends Controller
 
     public function forcedelete(Request $request)
     {
-        $forcedelete = Post::where('id', $request->id)->forceDelete();
+        $forcedelete = Post::where('guru1.id', $request->id)->forceDelete();
 
         return response()->json([
             'success' => true,

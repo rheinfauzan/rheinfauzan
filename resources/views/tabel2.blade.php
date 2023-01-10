@@ -7,12 +7,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>Tabel Pengajar</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables 2</li>
+              <li class="breadcrumb-item active">Dosen</li>
             </ol>
           </div>
         </div>
@@ -72,16 +72,17 @@
               <div class="card-body">
                 <button class="btn btn-success btn-xs list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#tambahDataGuru">Tambah</button>
                 <a href="{{ url('export_excel') }}" class="btn btn-xs btn-info my-3" target="_blank">Excel</a>
-                <a href="{{ url('export_pdf') }}" id="exportpdf" class="btn btn-xs btn-info my-3" target="_blank">Pdf</a>
+                <button type="button" class="btn btn-primary btn-xs" id="exportPdf">PDF</button>
+                {{-- <a href="{{ url('export_pdf') }}" id="exportpdf" class="btn btn-xs btn-info my-3" target="_blank">Pdf</a> --}}
                 <table id="showGuru" class="table table-bordered table-striped" width="100%">
                     <thead>
                       <tr>
                         <th width="30%" class="text-center">Nama Guru</th>
-                        <th width="20%" class="text-center">NIP Guru</th>
-                        <th width="auto" class="text-center">Jabatan</th>
+                        <th width="15%" class="text-center">NIP Guru</th>
+                        <th width="10%" class="text-center">Jabatan</th>
                         <th width="auto" class="text-center">Kode Mata Kuliah</th>
-                        <th width="auto" class="text-center">Mata Kuliah</th>
-                        <th width="20%" class="text-left">Action</th>
+                        <th width="18%" class="text-center">Mata Kuliah</th>
+                        <th width="12%" class="text-left">Action</th>
                       </tr>
                     </thead>
                     <tbody id="delete">
@@ -128,6 +129,7 @@
             <div class="form-grub">
               <label for="jabatan">Jabatan</label>
               <select name="jabatan" id="tambahJabatan" class="form-control" >
+                <option value="" selected></option>
                 <option value="Kepala Sekolah">Kepala Sekolah</option>
                 <option value="Guru">Guru</option>
                 <option value="Staff">Staff</option>
@@ -136,9 +138,11 @@
             </div>
             <div class="form-grub">
               <label for="matkul">Kode Mata Kuliah</label>
-              <select name="matkul" id="tambahSks" class="form-control" >
+              <select name="matkul" id="tambahSks" class="form-control  select2-purple" >
+                    <option value="" selected></option>
                   @foreach ($skstabels as $skstabel)
-                    <option value="{{ $skstabel->id }}">{{$skstabel->sks}}</option>
+                    <option value="{{ $skstabel->id }}"> 
+                      {{"( ".$skstabel->sks.")   ".$skstabel->nm_matkul }}</option>
                   @endforeach
               </select>
               <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-jabatan"></div>
@@ -192,7 +196,7 @@
               <label for="matkul">Kode Mata Kuliah</label>
               <select name="matkul" id="editSks" class="form-control" >
                   @foreach ($skstabels as $skstabel)
-                    <option value="{{ $skstabel->id }}">{{$skstabel->sks}}</option>
+                    <option value="{{ $skstabel->id }}">{{ $skstabel->sks."  ".$skstabel->nm_matkul }}</option>
                   @endforeach
               </select>
               <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-jabatan"></div>
@@ -214,6 +218,8 @@
   <link rel="stylesheet" href="/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- SweetAlert2 -->
   <link rel="stylesheet" href="/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+  <!-- daterange picker -->
+  <link rel="stylesheet" href="/plugins/daterangepicker/daterangepicker.css">
 @endpush
 
 @push('scripts')
@@ -231,6 +237,8 @@
   <script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
   <!-- SweetAlert2 -->
   <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
+  <!-- date-range-picker -->
+  <script src="/plugins/daterangepicker/daterangepicker.js"></script>
 @endpush
 
 @push('scripts')
@@ -277,7 +285,7 @@
                   ]
         });
       // end get
-
+      // $('#reservation').daterangepicker();
       // add data //
         $('#simpanData').click(function(e) {
             e.preventDefault();
@@ -288,6 +296,8 @@
             let jabatan = $('#tambahJabatan').val();
             let matkul = $('#tambahSks').val();
             let token   = $("meta[name='csrf-token']").attr("content");
+
+            let form = "#formTambah";
             
             //ajax
             $.ajax({
@@ -302,24 +312,34 @@
                     "_token": token,
                 },
                 success:function(response){
-                  Swal.fire({
-                                type: 'success',
-                                icon: 'success',
-                                title: `${response.message}`,
-                                showConfirmButton: true,
-                                timer: 3000,
-                    });
+                  if (response.status) {
+                    Swal.fire({
+                                  type: 'success',
+                                  icon: 'success',
+                                  title: `${response.message}`,
+                                  showConfirmButton: true,
+                                  timer: 3000,
+                      });
 
-                    //clear form
-                    $('#tambahGuru').val('');
-                    $('#tambahNip').val('');
-                    $('#tambahJabatan').val('');
-                    $('#tambahSks').val('');
+                      //clear form
+                      $('#tambahGuru').val('');
+                      $('#tambahNip').val('');
+                      $('#tambahJabatan').val('');
+                      $('#tambahSks').val('');
 
-                    //close modal
-                    $('#tambahDataGuru').modal('hide');
-                    // refresh page
-                    data.draw();
+                      //close modal
+                      $('#tambahDataGuru').modal('hide');
+                      // refresh page
+                      data.draw();
+
+                  } else {
+                    $(form+" .invalid-feedback").remove()
+                        $(form+" input, "+form+"  select, "+form+" textbox").removeClass("is-invalid")
+                        jQuery.each(response.data, function(i, val) {
+                            $(form + ' [name="' + i + '"]').addClass('is-invalid').after('<div class="invalid-feedback">' + val + '</div>');
+                        })
+                        Swal.fire("Gagal!", "Data Kendaraan gagal ditambahkan. Pesan: " + response.message, "error");
+                  }
                 },
                 
 
@@ -365,7 +385,7 @@
                     $('#editNama').val(response.data.nama_guru);
                     $('#editNip').val(response.data.nip_guru);
                     $('#editJabatan').val(response.data.jabatan);
-                    $('#editSks').val(response.data.matkul);
+                    $('#editSks').val(response.data.sks_id);
                 },
             })
           })
@@ -569,24 +589,23 @@
           data.draw();
         })
     // end filter
-    $('#exportpdf').change(function(e) {
-            e.preventDefault();
+    $("#exportPdf").on('click', function() {
+      let mulai = $("#tanggal-mulai").val();
+      let selesai = $("#tanggal-selesai").val();
+      let nama = 
 
-            //define variable
-            let tglmulai   = $('#tanggal-mulai').val();
-            let tglselesai = $('#tanggal-selesai').val();
-            
-            //ajax
-            $.ajax({
-                url: `export_pdf`,
-                type: "GET",
-                data: {
-                    "tgl_mulai": tglmulai,
-                    "tgl_selesai": tglselesai,
-                }
-            });
+      $.ajax({
+        url: 'export_pdf',
+        type: 'GET',
+        cache: false,
+        data: {
+          "mulai": mulai,
+          "selesai": selesai,
+        },
+      })
+    })
 
-        });
-  })
+
+});
 </script>
 @endpush

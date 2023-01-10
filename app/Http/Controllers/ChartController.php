@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MahasiswaModel;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -34,8 +35,16 @@ class ChartController extends Controller
             foreach ($card as $index => $value) {
                 $card_mhs = $value->card_mhs;
             }
-        }
-                    
-        return view('profile', ['card_mhs'=>$card_mhs], ['jml_mhs' => $jml_mhs, 'angkatan' => $angkatan]);
+        };
+
+        $jmlguru = Post::select('guru1.id')->count();
+        // dd($jmlguru);
+        // $rowcount = [$key => $jmlguru];
+        
+
+
+
+        
+        return view('profile', ['card_mhs'=>$card_mhs, 'jmlgurus'=>$jmlguru], ['jml_mhs' => $jml_mhs, 'angkatan' => $angkatan]);
     }
 }

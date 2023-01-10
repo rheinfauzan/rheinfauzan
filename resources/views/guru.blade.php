@@ -22,7 +22,7 @@
 		</thead>
 		<tbody>
 			@php $i=1 @endphp
-			@foreach($getguru as $p)
+			@foreach($guru as $p)
 			<tr>
 				<td>{{$p->nama_guru}}</td>
 				<td>{{$p->nip_guru}}</td>
