@@ -70,19 +70,44 @@
                
               <!-- /.card-header -->
               <div class="card-body">
-                <button class="btn btn-success btn-xs list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#tambahDataGuru">Tambah</button>
-                <a href="{{ url('export_excel') }}" class="btn btn-xs btn-info my-3" target="_blank">Excel</a>
-                <button type="button" class="btn btn-primary btn-xs" id="exportPdf">PDF</button>
+                
+                <div class="row">
+                  <div class="col-12">
+                      <button class="btn btn-success btn-xs list-inline-item" type="button" data-toggle="modal" data-placement="top" data-target="#tambahDataGuru">Tambah</button>
+                      <button type="button" class="btn btn-primary btn-xs" id="export_excel">Excel</button>
+                      <button type="button" class="btn btn-primary btn-xs" id="exportPdf">PDF</button>
+                      <div>
+                        <form  action="{{ url('export_excel') }}" id="formexportexcel" method="GET">
+                          <input type="hidden" name="guru_filter"  id="export_guru_filter">
+                          <input type="hidden" name="nip_filter" id="export_nip_filter">
+                          <input type="hidden" name="jabatan_filter" id="export_jabatan_filter">
+                          <input type="hidden" name="tanggal-mulai" id="export_mulai_filter">
+                          <input type="hidden" name="tanggal-selesai" id="export_selesai_filter">
+                        </form>
+                      </div>
+                      <div>
+                      <form  action="{{ url('export_pdf') }}" id="formexportpdf" method="GET">
+                        <input type="hidden" name="guru_filter"  id="export_guru_pdf">
+                        <input type="hidden" name="nip_filter" id="export_nip_pdf">
+                        <input type="hidden" name="jabatan_filter" id="export_jabatan_pdf">
+                        <input type="hidden" name="tanggal-mulai" id="export_mulai_pdf">
+                        <input type="hidden" name="tanggal-selesai" id="export_selesai_pdf">
+                      </form>
+                      </div>
+                  </div>
+                </div>
+                {{-- <a href="{{ url('export_excel') }}" class="btn btn-xs btn-info my-3" target="_blank">Excel</a> --}}
+
                 {{-- <a href="{{ url('export_pdf') }}" id="exportpdf" class="btn btn-xs btn-info my-3" target="_blank">Pdf</a> --}}
                 <table id="showGuru" class="table table-bordered table-striped" width="100%">
                     <thead>
                       <tr>
                         <th width="30%" class="text-center">Nama Guru</th>
                         <th width="15%" class="text-center">NIP Guru</th>
-                        <th width="10%" class="text-center">Jabatan</th>
+                        <th width="20%" class="text-center">Jabatan</th>
                         <th width="auto" class="text-center">Kode Mata Kuliah</th>
-                        <th width="18%" class="text-center">Mata Kuliah</th>
                         <th width="12%" class="text-left">Action</th>
+                        {{-- <th width="18%" class="text-center" hidden>Mata Kuliah</th> --}}
                       </tr>
                     </thead>
                     <tbody id="delete">
@@ -277,11 +302,10 @@
                       { "data": "nip_guru" },
                       { "data": "jabatan" },
                       { "data": "sks"},
-                      { "data": "nm_matkul" },
-                      { "data": "action" },                   
+                      { "data": "action" },  
                   ],
                   "columnDefs": [
-                    { className: "text-center", "targets": [ 5 ] },
+                    { className: "text-center", "targets": [ 4 ] },
                   ]
         });
       // end get
@@ -312,7 +336,17 @@
                     "_token": token,
                 },
                 success:function(response){
-                  if (response.status) {
+
+
+                  if (response.status == false) {
+                        $(form+" .invalid-feedback").remove()
+                        $(form+" input, "+form+"  select, "+form+" textbox").removeClass("is-invalid")
+                        jQuery.each(response.data, function(i, val) {
+                            $(form + ' [name="' + i + '"]').addClass('is-invalid').after('<div class="invalid-feedback">' + val + '</div>');
+                        })
+                        Swal.fire("Gagal!", response.message,"error"); 
+                        data.draw();
+                  } else {
                     Swal.fire({
                                   type: 'success',
                                   icon: 'success',
@@ -332,14 +366,7 @@
                       // refresh page
                       data.draw();
 
-                  } else {
-                    $(form+" .invalid-feedback").remove()
-                        $(form+" input, "+form+"  select, "+form+" textbox").removeClass("is-invalid")
-                        jQuery.each(response.data, function(i, val) {
-                            $(form + ' [name="' + i + '"]').addClass('is-invalid').after('<div class="invalid-feedback">' + val + '</div>');
-                        })
-                        Swal.fire("Gagal!", "Data Kendaraan gagal ditambahkan. Pesan: " + response.message, "error");
-                  }
+                  }    
                 },
                 
 
@@ -573,38 +600,73 @@
       // end forceDelete
 
     // filter
-        $('#guru_filter,#nip_filter').keyup(function(){
+        $('#guru_filter').keyup(function(){
+          var guru = $('#guru_filter').val();
+          $('#export_guru_filter').val(guru);
+          data.draw();
+        })
+
+        $('#nip_filter').keyup(function(){
+          var nip = $('#nip_filter').val();
+          $('#export_nip_filter').val(nip);
           data.draw();
         })
 
         $('#jabatan_filter').on('click', function(){
+          var jabatan = $('#jabatan_filter').val();
+          $('#export_jabatan_filter').val(jabatan);
           data.draw();
         })
 
         $('#tanggal-mulai').on('change', function(){
+          $('#export_mulai_filter').val($("#tanggal-mulai").val());
           data.draw();
         })
 
         $('#tanggal-selesai').on('change', function(){
+          $('#export_selesai_filter').val($('#tanggal-selesai').val());
+          data.draw();
+        })
+
+
+
+        $('#guru_filter').keyup(function(){
+          var guru = $('#guru_filter').val();
+          $('#export_guru_pdf').val(guru);
+          data.draw();
+        })
+
+        $('#nip_filter').keyup(function(){
+          var nip = $('#nip_filter').val();
+          $('#export_nip_pdf').val(nip);
+          data.draw();
+        })
+
+        $('#jabatan_filter').on('click', function(){
+          var jabatan = $('#jabatan_filter').val();
+          $('#export_jabatan_pdf').val(jabatan);
+          data.draw();
+        })
+
+        $('#tanggal-mulai').on('change', function(){
+          $('#export_mulai_pdf').val($("#tanggal-mulai").val());
+          data.draw();
+        })
+
+        $('#tanggal-selesai').on('change', function(){
+          $('#export_selesai_pdf').val($('#tanggal-selesai').val());
           data.draw();
         })
     // end filter
-    $("#exportPdf").on('click', function() {
-      let mulai = $("#tanggal-mulai").val();
-      let selesai = $("#tanggal-selesai").val();
-      let nama = 
 
-      $.ajax({
-        url: 'export_pdf',
-        type: 'GET',
-        cache: false,
-        data: {
-          "mulai": mulai,
-          "selesai": selesai,
-        },
-      })
+    // form export
+    $("#export_excel").on('click', function() {
+      $('#formexportexcel').submit();
     })
-
+    $("#exportPdf").on('click', function() {
+      $('#formexportpdf').submit();
+    })
+    // end Form exorit
 
 });
 </script>

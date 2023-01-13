@@ -63,6 +63,10 @@ class ControllerDua extends Controller
                 
                 })
             ->rawColumns(['action'])
+            ->editColumn('sks', function($row) {
+                $matkul = "(".$row->sks.") ".$row->nm_matkul;
+                return $matkul;
+            })
             ->make(true)); 
     }
 
@@ -83,7 +87,7 @@ class ControllerDua extends Controller
                 'message' => 'Validasi gagal.',
                 'data' => $validator->messages(),
             ]);
-        }
+        };
 
         $guru = new Post();
         $guru->nama_guru = $request->nama;
@@ -92,14 +96,11 @@ class ControllerDua extends Controller
         $guru->sks_id = $request->matkul;
 
         if($guru->save()){
-            //return response
             return response()->json([
                 'success' => true,
                 'message' => 'Data Post Berhasil Disimpan!',
-        ]);
-        };
-
-  
+            ]);
+        };  
     }
 
 

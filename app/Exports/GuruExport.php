@@ -9,7 +9,22 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Excel;
 class GuruExport implements WithEvents
-{
+{   
+
+    protected $guru;
+    protected $nip;
+    protected $jabatan;
+    protected $tglmulai;
+    protected $tglselesai;
+
+    function __construct($data) {
+            $this->guru = $data["guru_filter"];
+            $this->nip = $data["nip_filter"];
+            $this->jabatan = $data["jabatan_filter"];
+            $this->tglmulai = $data["tanggal-mulai"];
+            $this->tglselesai = $data["tanggal-selesai"];
+        }
+
     /**
     * @return \Illuminate\Support\Collection
     */
@@ -35,7 +50,28 @@ class GuruExport implements WithEvents
         return [
             AfterSheet::class    => function(AfterSheet $event) {
 
-                $data = Post::select('nama_guru', 'nip_guru', 'jabatan')->get();
+                $data = Post::select('nama_guru', 'nip_guru', 'jabatan', 't_sks.sks', 't_sks.nm_matkul')->leftJoin('tb_sks as t_sks', 'guru1.sks_id', '=', 't_sks.id');
+
+                if (!empty($this->guru)) {
+                    $data->where('nama_guru', 'like', '%'.$this->guru.'%');
+                }
+                if (!empty($this->nip)) {
+                    $data->where('nip_guru', 'like', '%'.$this->nip.'%');
+                }
+                if (!empty($this->guru)) {
+                    $data->where('jabatan', 'like', '%'.$this->jabatan.'%');
+                }
+                if ($this->tglmulai != null || $this->tglselesai != null) {
+            
+                    $tgl_mulai = date('Y-m-d',strtotime($this->tglmulai));
+                    $tgl_selesai = date('Y-m-d',strtotime($this->tglselesai));
+        
+                            $data->whereDate('guru1.created_at', '>=', $tgl_mulai);
+                            $data->whereDate('guru1.created_at', '<=', $tgl_selesai);
+        
+                }
+
+                $data = $data->get();
                 
 
                 // Set cell A1 with Your Title
@@ -54,10 +90,16 @@ class GuruExport implements WithEvents
                     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                     ->getStartColor()->setARGB('FF17a2b8');
 
+                $event->sheet->setCellValue('D1', 'Mata Kuliah');
+                $event->sheet->getDelegate()->getStyle('D1')->getFill()
+                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                    ->getStartColor()->setARGB('FF17a2b8');
+
                 // size column
                 $event->sheet->getColumnDimension('A')->setAutoSize(true);
                 $event->sheet->getColumnDimension('B')->setAutoSize(true);
                 $event->sheet->getColumnDimension('C')->setAutoSize(true);
+                $event->sheet->getColumnDimension('D')->setAutoSize(true);
 
                 // get data
                 $i = 2;
@@ -65,6 +107,7 @@ class GuruExport implements WithEvents
                     $event->sheet->setCellValue('A'.$i, $value->nama_guru);
                     $event->sheet->setCellValue('B'.$i, $value->nip_guru);
                     $event->sheet->setCellValue('C'.$i, $value->jabatan);
+                    $event->sheet->setCellValue('D'.$i, "(".$value->sks.") ".$value->nm_matkul);
                     $i++;
                 };
 

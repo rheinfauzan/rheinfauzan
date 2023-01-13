@@ -11,27 +11,26 @@ use PDF;
 
 class ControllerExport extends Controller
 {
-    public function export_excel()
+    public function export_excel(Request $request)
 	{	
-		
-		$filename = urlencode("guru-".date("d-m-Y").".xlsx");
-		$data = Excel::download(new GuruExport, $filename);
+		// dd($request->all());
+		$filename = urlencode("guru-".date("d-m-Y_H:i:s").".xlsx");
+		$data = Excel::download(new GuruExport($request->all()), $filename);
 		return $data;
 	}
 
     public function export_pdf(Request $request)
 	{	
 
-		// $tglmulai = date('Y-m-d',strtotime($request->mulai));
-		// $tglselesai = date('Y-m-d',strtotime($request->selesai));
+		dd($request->all());
 
 		// dd($tglmulai);
 		
-		// $getguru = Post::select('id', 'nama_guru', 'nip_guru', 'jabatan',)
+		// $getguru = Post::select('nama_guru', 'nip_guru', 'jabatan')
 		// 		->whereDate('created_at', '>=', $tglmulai)
 		// 		->whereDate('created_at', '<=', $tglselesai)
 		// 		->get();
-				$getguru = Post::all();
+				// $getguru = Post::all();
 
 		// dd($getguru);
 		// dd([$tglmulai, $tglselesai]);
