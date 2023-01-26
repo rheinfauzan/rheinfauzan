@@ -18,6 +18,7 @@
                 <th>Nama Guru</th>
                 <th>NIP Guru</th>
                 <th>Jabatan</th>
+				<th>Kode Mata Kuliah</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -27,6 +28,7 @@
 				<td>{{$p->nama_guru}}</td>
 				<td>{{$p->nip_guru}}</td>
 				<td>{{$p->jabatan}}</td>
+				<td>{{"(".$p->sks.") ".$p->nm_matkul}}</td>
 			</tr>
 			@endforeach
 		</tbody>

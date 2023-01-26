@@ -22,21 +22,40 @@ class ControllerExport extends Controller
     public function export_pdf(Request $request)
 	{	
 
-		dd($request->all());
+		// dd($request->all());
+		$guru	 	= $request["guru_filter"];
+		$nip 		= $request["nip_filter"];
+		$jabatan 	= $request["jabatan_filter"];
+		$tglmulai 	= $request["tanggal-mulai"];
+		$tglselesai = $request["tanggal-selesai"];
+		// dd($guru);
 
-		// dd($tglmulai);
-		
-		// $getguru = Post::select('nama_guru', 'nip_guru', 'jabatan')
-		// 		->whereDate('created_at', '>=', $tglmulai)
-		// 		->whereDate('created_at', '<=', $tglselesai)
-		// 		->get();
-				// $getguru = Post::all();
+		$data = Post::select('nama_guru', 'nip_guru', 'jabatan', 't_sks.sks', 't_sks.nm_matkul')->leftJoin('tb_sks as t_sks', 'guru1.sks_id', '=', 't_sks.id');
 
-		// dd($getguru);
-		// dd([$tglmulai, $tglselesai]);
+		if (!empty($guru)) {
+			$data->where('nama_guru', 'like', '%'.$guru.'%');
+		}
+		if (!empty($nip)) {
+			$data->where('nip_guru', 'like', '%'.$nip.'%');
+		}
+		if (!empty($jabatan)) {
+			$data->where('jabatan', 'like', '%'.$jabatan.'%');
+		}
+		if ($tglmulai != null || $tglselesai != null) {
+	
+			$tgl_mulai = date('Y-m-d',strtotime($tglmulai));
+			$tgl_selesai = date('Y-m-d',strtotime($tglselesai));
+
+					$data->whereDate('guru1.created_at', '>=', $tgl_mulai);
+					$data->whereDate('guru1.created_at', '<=', $tgl_selesai);
+
+		}
+
+		$data = $data->get();
+
 		$filename = urlencode("guru-".date("d-m-Y").".pdf");
 
-        $pdf = PDF::loadview('guru', ['guru'=>$getguru]);
+        $pdf = PDF::loadview('guru', ['guru'=>$data]);
         return $pdf->download($filename);
 	}
 }

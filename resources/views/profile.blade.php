@@ -52,8 +52,8 @@
             {{-- jumlah mahasiswa --}}
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>150</h3>
-                <p>New Orders</p>
+                <h3>{{ $jmlmatkuls }}</h3>
+                <p>Jumlah Mata Kuliah</p>
               </div>
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>

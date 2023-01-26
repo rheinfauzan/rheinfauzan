@@ -11,8 +11,8 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item"><a href="#">Kurikulum</a></li>
+              <li class="breadcrumb-item active">SKS</li>
             </ol>
           </div>
         </div>
@@ -71,17 +71,17 @@
         <div class="modal-body">
           {{-- form --}}
           <form id="formTambah">
-            <div class="form-grub">
-              <label for="sks">SKS</label>
-              <input type="text" id="tambahSks" name="nama" class="form-control" placeholder="SKS">
-              <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-title"></div>
-            </div>
-        <div class="form-grub">
-          <label for="namaMatkul">NIM</label>
-          <input type="text" id="tambahMatkul" name="matkul" class="form-control" placeholder="Mata Kuliah">
-          <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nim"></div>
-        </div>
-      </form>
+              <div class="form-grub">
+                <label for="sks">SKS</label>
+                <input type="text" id="tambahSks" name="nama" class="form-control" placeholder="SKS">
+                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-title"></div>
+              </div>
+              <div class="form-grub">
+                <label for="namaMatkul">NIM</label>
+                <input type="text" id="tambahMatkul" name="matkul" class="form-control" placeholder="Mata Kuliah">
+                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nim"></div>
+              </div>
+          </form>
           {{-- .form --}}
         </div>
         <div class="modal-footer">
@@ -105,28 +105,18 @@
         </div>
         <div class="modal-body">
           {{-- form --}}
- 
-          <form>
-            <input type="hidden" id="post_id">
-            <div class="form-grub">
-              <label for="namaSiswa">Nama</label>
-              <input type="text" id="editNama" class="form-control" placeholder="Nama">
-            </div>
-          </form>
-          <div class="form-grub">
-            <label for="namaSiswa">Kelas</label>
-            <select name="editkelas" id="editKelas" class="form-control" >
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-            </select>
-          </div>
-        </form>
-        <div class="form-grub">
-          <label for="namaSiswa">NIM</label>
-          <input type="text" id="editNim" class="form-control" placeholder="Nama">
-        </div>
-      </form>
+            <form id="formEdit">
+              <div class="form-grub">
+                <label for="editsks">SKS</label>
+                <input type="text" id="editSks" name="sks" class="form-control" placeholder="SKS">
+                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-title"></div>
+              </div>
+              <div class="form-grub">
+                <label for="editNim">NIM</label>
+                <input type="text" id="editMatkul" name="matkul" class="form-control" placeholder="Mata Kuliah">
+                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nim"></div>
+              </div>
+            </form>
           {{-- .form --}}
         </div>
         <div class="modal-footer">
@@ -259,10 +249,91 @@
         // end Tambah data
 
         // Show data for edit
-        $('body section table thead tr tb').on("click", ".edit", function() {
+        $('body section table tbody').on("click", ".edit", function() {
             let id = $(this).data('id');
+
+            $.ajax({
+              url: "/getupdate",
+              type: "GET",
+              cache: false,
+              data: {
+                'id' : id,
+              },
+                success:function(response){
+                      $('#id').val(response.data.id);
+                      $('#editSks').val(response.data.sks);
+                      $('#editMatkul').val(response.data.nm_matkul);
+                  },
+            })
         })
-        // end show data dor edit
+        // end show data for edit
+
+        // edit
+        $('#simpanPerubahan').click(function(e) {
+            e.preventDefault();
+
+            //define variable
+            let id = $('#id').val();
+            let editsks   = $('#editSks').val();
+            let editmatkul = $('#editMatkul').val();
+            let token   = $("meta[name='csrf-token']").attr("content");
+            
+            //ajax
+            $.ajax({
+
+                url: `/updatedata`,
+                type: "POST",
+                cache: false,
+                data: {
+                    "id": id,
+                    "sks": editsks,
+                    "matkul": editmatkul,
+                    "_token": token,
+                },
+                success:function(response){
+                  swal.fire({
+                                type: 'success',
+                                icon: 'success',
+                                title: `${response.message}`,
+                                showConfirmButton: true,
+                                timer: 1500,
+                    });
+
+                    //clear form
+                    $('#editSks').val('');
+                    $('#editMatkul').val('');
+
+                    // hide modal
+                    $('#editData').modal('hide');
+                    // refresh page
+                    sks.ajax.reload();
+                },
+                
+
+                error:function(error){
+
+                  if(error.responseJSON.nama[0]) {
+                          //show alert
+                          $('#alert-nama').removeClass('d-none');
+                          $('#alert-nama').addClass('d-block');
+
+                          //add message to alert
+                          $('#alert-nama').html(error.responseJSON.nama[0]);
+                          }
+
+                  if(error.responseJSON.nip[0]) {
+                          //show alert
+                          $('#alert-nip').removeClass('d-none');
+                          $('#alert-nip').addClass('d-block');
+
+                          //add message to alert
+                          $('#alert-nip').html(error.responseJSON.nip[0]);
+                          } 
+                }
+            });
+
+          });
+        // end edit
 
     }) // End Document //
 </script>

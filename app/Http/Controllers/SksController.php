@@ -23,17 +23,11 @@ class SksController extends Controller
             ->addColumn('action', function($row){
                 $button = '';  
                 
-                if ($row->deleted_at == null) {
+
                     $button .= '<button data-id="'.$row->id.'" class="btn btn-success btn-sm list-inline-item edit" type="button" data-toggle="modal" data-placement="top" data-target="#editData">Edit</button>';
                     $button .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-sm list-inline-item btn-circle delete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
-                
-                } else {
-                    $button .= '<button data-id="'.$row->id.'" class="btn btn-primary btn-sm list-inline-item restore" type="button" data-toggle="modal" data-placement="top" data-target="#restoreData">Restore</button>';
-                    $button .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-sm list-inline-item btn-circle forceDelete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
-                };  
-
+            
                 return $button;
-                
                 })
             ->rawColumns(['action'])
             ->make(true);         
@@ -76,5 +70,37 @@ class SksController extends Controller
             ]);
         }
 
+    }
+
+    public function show(Request $request)
+    {
+        $showsks = SksModel::select('id', 'sks', 'nm_matkul')->where('id', $request->id)->first();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail Data Post',
+            'data' => $showsks,
+        ]);
+    }
+
+    public function updatedata(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'sks' => 'required',
+            'matkul' => 'required',
+        ]);
+
+        //create post
+        SksModel::where('id', $request->id)
+        ->update([
+        'sks' => $request->editsks, 
+        'nm_matkul' => $request->editmatkul,
+        ]);
+
+        //return response
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Diupdate!',
+        ]);
     }
 }

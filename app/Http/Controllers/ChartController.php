@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MahasiswaModel;
 use App\Models\Post;
+use App\Models\SksModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -40,11 +41,12 @@ class ChartController extends Controller
         $jmlguru = Post::select('guru1.id')->count();
         // dd($jmlguru);
         // $rowcount = [$key => $jmlguru];
-        
+        $jmlmatkul = SksModel::select('tb_sks.id')->count();
+        // dd($jmlmatkul);
 
 
 
         
-        return view('profile', ['card_mhs'=>$card_mhs, 'jmlgurus'=>$jmlguru], ['jml_mhs' => $jml_mhs, 'angkatan' => $angkatan]);
+        return view('profile', ['card_mhs'=>$card_mhs, 'jmlgurus'=>$jmlguru, 'jmlmatkuls'=>$jmlmatkul], ['jml_mhs' => $jml_mhs, 'angkatan' => $angkatan]);
     }
 }

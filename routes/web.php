@@ -95,4 +95,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/skstabel', [App\Http\Controllers\SksController::class, 'skstabel']);
 
     Route::post('/addsks', [App\Http\Controllers\SksController::class, 'addsks']);
+
+    Route::get('/getupdate', [App\Http\Controllers\SksController::class, 'show']);
+
+    Route::post('/updatedata', [App\Http\Controllers\SksController::class, 'updatedata']);
     });
