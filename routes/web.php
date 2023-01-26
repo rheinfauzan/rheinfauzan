@@ -99,4 +99,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/getupdate', [App\Http\Controllers\SksController::class, 'show']);
 
     Route::post('/updatedata', [App\Http\Controllers\SksController::class, 'updatedata']);
+
+    Route::post('/forcedelete', [App\Http\Controllers\SksController::class, 'forcedelete']);
     });

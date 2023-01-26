@@ -105,7 +105,9 @@
         </div>
         <div class="modal-body">
           {{-- form --}}
+            
             <form id="formEdit">
+              <input type="hidden" id="id">
               <div class="form-grub">
                 <label for="editsks">SKS</label>
                 <input type="text" id="editSks" name="sks" class="form-control" placeholder="SKS">
@@ -334,6 +336,48 @@
 
           });
         // end edit
+
+        // force delete
+        $('body section table tbody').on('click', '.forceDelete', function() {
+          let delete_id = $(this).data('id');
+          let token   = $("meta[name='csrf-token']").attr("content");
+
+          Swal.fire({
+                  title: 'Apakah kamu yakin ?',
+                  text: 'ingin menghapus permanen data ini!',
+                  icon: "warning",
+                  showCancelButton: true,
+                  cancelButtonText: 'TIDAK',
+                  confirmButtonText: 'YA!',
+                  }).then((result) => {
+                    if (result.isConfirmed){
+
+                      // fetch to delete
+                      $.ajax({
+                            url: `forcedelete`,
+                            type: "POST",
+                            cache: false,
+                            data: {
+                                "id": delete_id,
+                                "_token": token,
+                            },
+                            success:function(response){
+                                Swal.fire({
+                                  type: 'success',
+                                  icon: 'success',
+                                  title: `${response.message}`,
+                                  showConfirmButton: false,
+                                  timer: 3000,
+                                });
+
+                                // refresh web
+                                data.draw();
+                            },
+                        });
+                      };
+                    })
+        })  
+        // end force delete
 
     }) // End Document //
 </script>

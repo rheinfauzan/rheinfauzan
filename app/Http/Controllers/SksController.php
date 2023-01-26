@@ -25,7 +25,7 @@ class SksController extends Controller
                 
 
                     $button .= '<button data-id="'.$row->id.'" class="btn btn-success btn-sm list-inline-item edit" type="button" data-toggle="modal" data-placement="top" data-target="#editData">Edit</button>';
-                    $button .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-sm list-inline-item btn-circle delete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
+                    $button .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-sm list-inline-item btn-circle forceDelete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
             
                 return $button;
                 })
@@ -93,14 +93,24 @@ class SksController extends Controller
         //create post
         SksModel::where('id', $request->id)
         ->update([
-        'sks' => $request->editsks, 
-        'nm_matkul' => $request->editmatkul,
+        'sks' => $request->sks, 
+        'nm_matkul' => $request->matkul,
         ]);
 
         //return response
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Diupdate!',
+        ]);
+    }
+
+    public function forcedelete(Request $request)
+    {
+        // $forcedelete = SksModel::foreign('sks_id')->references('id')->on('tb_sks as t_sks')->onDelete('cascade');
+        $forcedelete = SksModel::where('id', $request->id)->forceDelete();
+        return response()->json([
+            'success' => true,
+            'message' => "Data berhasil dihapus",
         ]);
     }
 }
