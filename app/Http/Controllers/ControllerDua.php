@@ -152,7 +152,7 @@ class ControllerDua extends Controller
     public function delete(Request $request)
     {
         $deleted = Post::where('guru1.id', $request->id);
-        $deleted = $deleted->forceDelete();
+        $deleted = $deleted->delete();
 
         return response()->json([
             'success' => true,

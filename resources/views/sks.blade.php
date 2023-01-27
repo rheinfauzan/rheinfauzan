@@ -371,7 +371,7 @@
                                 });
 
                                 // refresh web
-                                data.draw();
+                                sks.ajax.reload();
                             },
                         });
                       };

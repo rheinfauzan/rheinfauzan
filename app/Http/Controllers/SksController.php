@@ -107,7 +107,15 @@ class SksController extends Controller
     public function forcedelete(Request $request)
     {
         // $forcedelete = SksModel::foreign('sks_id')->references('id')->on('tb_sks as t_sks')->onDelete('cascade');
-        $forcedelete = SksModel::where('id', $request->id)->forceDelete();
+        $forcedelete = SksModel::where('id', $request->id);
+        $forcedelete->delete();
+
+        try {
+            $forcedelete->forceDelete();
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
         return response()->json([
             'success' => true,
             'message' => "Data berhasil dihapus",
