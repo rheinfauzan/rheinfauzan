@@ -101,4 +101,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/updatedata', [App\Http\Controllers\SksController::class, 'updatedata']);
 
     Route::post('/forcedelete', [App\Http\Controllers\SksController::class, 'forcedelete']);
+
+    Route::get('/test', [App\Http\Controllers\SksController::class, 'test']);
     });

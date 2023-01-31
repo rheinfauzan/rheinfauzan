@@ -121,4 +121,132 @@ class SksController extends Controller
             'message' => "Data berhasil dihapus",
         ]);
     }
+
+    public function test() 
+    {
+        $siswa = [
+            (object)[
+                'siswa_id'=>1,
+                'nama'=>'siswa1',
+            ],
+            (object)[
+                'siswa_id'=>2,
+                'nama'=>'siswa2',
+            ],
+            (object)[
+                'siswa_id'=>3,
+                'nama'=>'siswa3',
+            ],
+        ];
+
+        $datasiswa = [];
+        // $key = [];
+
+        foreach ($siswa as $i => $item) {
+           $datasiswa[$item->siswa_id] = $item->nama; 
+        //    $siswa[$i]->umur = '10'; //add atau get data object
+        }
+
+        // dd($siswa);
+
+        $kelas = [
+            (object)[
+                'kelas_id'=>1,
+                'nama_kelas'=>'Kelas A',
+            ],
+            (object)[
+                'kelas_id'=>2,
+                'nama_kelas'=>'Kelas B',
+            ],
+        ];
+
+        $datakelas = [];
+        // $key = [];
+
+        foreach ($kelas as $key => $value) {
+           $datakelas[$value->kelas_id] = $value->nama_kelas;
+        };
+
+        // dd($kelassiswa);
+
+
+
+
+        $kelas_siswa = [
+            (object)[
+                'kelas_id'=>1,
+                'siswa_id'=>1,
+            ],
+            (object)[
+                'kelas_id'=>1,
+                'siswa_id'=>2,
+            ],
+            (object)[
+                'kelas_id'=>2,
+                'siswa_id'=>3,
+            ],
+        ];
+
+
+        foreach ($kelas_siswa as $key => $value) {
+            // $kelas_siswa[$value->siswa_id];
+
+            if (isset($datakelas[$value->kelas_id])) {
+                $kelas_siswa[$key]->nama_kelas = $datakelas[$value->kelas_id];
+            };
+
+
+            if (isset($datasiswa[$value->siswa_id])) {
+                $kelas_siswa[$key]->nama_siswa = $datasiswa[$value->siswa_id];
+            }
+        }
+
+        $kelassiswafix = [];
+        foreach ($kelas_siswa as $key => $value) {
+            $kelassiswafix[$value->siswa_id] = [
+                "kelas_id" => $value->kelas_id,
+                "nama_kelas" => $value->nama_kelas,
+                "nama_siswa" => $value->nama_siswa,
+            ];
+        }
+
+        // dd($kelassiswafix);
+
+        $nilaiSiswa = [
+            (object)[
+                'mapel'=>'Matematika',
+                'nilai'=>79,
+                'siswa_id'=>1,
+            ],
+            (object)[
+                'mapel'=>'Matematika',
+                'nilai'=>90,
+                'siswa_id'=>2,
+            ],
+            (object)[
+                'mapel'=>'Matematika',
+                'nilai'=>89,
+                'siswa_id'=>3,
+            ],
+            (object)[
+                'mapel'=>'IPA',
+                'nilai'=>76,
+                'siswa_id'=>1,
+            ],
+            (object)[
+                'mapel'=>'IPA',
+                'nilai'=>80,
+                'siswa_id'=>2,
+            ],
+            (object)[
+                'mapel'=>'IPA',
+                'nilai'=>83,
+                'siswa_id'=>3,
+            ],
+        ];
+
+        $data = 
+
+        dd($data);
+    }
 }
