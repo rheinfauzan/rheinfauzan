@@ -147,7 +147,7 @@ class SksController extends Controller
         //    $siswa[$i]->umur = '10'; //add atau get data object
         }
 
-        // dd($siswa);
+        // dd($datasiswa);
 
         $kelas = [
             (object)[
@@ -161,13 +161,12 @@ class SksController extends Controller
         ];
 
         $datakelas = [];
-        // $key = [];
 
         foreach ($kelas as $key => $value) {
            $datakelas[$value->kelas_id] = $value->nama_kelas;
         };
 
-        // dd($kelassiswa);
+        // dd($datakelas);
 
 
 
@@ -203,11 +202,7 @@ class SksController extends Controller
 
         $kelassiswafix = [];
         foreach ($kelas_siswa as $key => $value) {
-            $kelassiswafix[$value->siswa_id] = [
-                "kelas_id" => $value->kelas_id,
-                "nama_kelas" => $value->nama_kelas,
-                "nama_siswa" => $value->nama_siswa,
-            ];
+            $kelassiswafix[$value->siswa_id] = $value->nama_kelas;
         }
 
         // dd($kelassiswafix);
@@ -217,36 +212,53 @@ class SksController extends Controller
                 'mapel'=>'Matematika',
                 'nilai'=>79,
                 'siswa_id'=>1,
+                // 'kelas_id'=>1,
             ],
             (object)[
                 'mapel'=>'Matematika',
                 'nilai'=>90,
-                'siswa_id'=>2,
+                'siswa_id'=>1,
+                // 'kelas_id'=>1,
             ],
             (object)[
                 'mapel'=>'Matematika',
                 'nilai'=>89,
                 'siswa_id'=>3,
+                // 'kelas_id'=>1,
             ],
             (object)[
                 'mapel'=>'IPA',
                 'nilai'=>76,
                 'siswa_id'=>1,
+                // 'kelas_id'=>1,
             ],
             (object)[
                 'mapel'=>'IPA',
                 'nilai'=>80,
                 'siswa_id'=>2,
+                // 'kelas_id'=>1,
             ],
             (object)[
                 'mapel'=>'IPA',
                 'nilai'=>83,
-                'siswa_id'=>3,
+                'siswa_id'=>2,
+                // 'kelas_id'=>1,
             ],
         ];
 
-        $data = 
+        
+        foreach ($nilaiSiswa as $key => $value) {
+            if (isset($kelassiswafix[$value->siswa_id])) {
+                $nilaiSiswa[$key]->nama = $datasiswa[$value->siswa_id];
+            }
+            if (isset($kelassiswafix[$value->siswa_id])) {
+                $nilaiSiswa[$key]->kelas = $kelassiswafix[$value->siswa_id];
+            }
 
-        dd($data);
+        }
+
+
+
+        dd($nilaiSiswa);
     }
 }
