@@ -39,6 +39,7 @@
                     <tr>
                       <th width="30%" class="text-center">SKS</th>
                       <th class="text-center">Mata Kuliah</th>
+                      <th width="20%" class="text-center">Bobot</th>
                       <th width="12%" class="text-left">Action</th>
                     </tr>
                   </thead>
@@ -73,13 +74,15 @@
           <form id="formTambah">
               <div class="form-grub">
                 <label for="sks">SKS</label>
-                <input type="text" id="tambahSks" name="nama" class="form-control" placeholder="SKS">
-                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-title"></div>
+                <input type="text" id="tambahSks" name="sks" class="form-control" placeholder="SKS">
               </div>
               <div class="form-grub">
-                <label for="namaMatkul">NIM</label>
-                <input type="text" id="tambahMatkul" name="matkul" class="form-control" placeholder="Mata Kuliah">
-                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nim"></div>
+                <label for="namaMatkul">Mata Kuliah</label>
+                <input type="text" id="tambahMatkul" name="nm_matkul" class="form-control" placeholder="Mata Kuliah">
+              </div>
+              <div class="form-grub">
+                <label for="bobot">Bobot SKS</label>
+                <input type="text" id="tambahBobot" name="bobot" class="form-control" placeholder="Bobot SKS">
               </div>
           </form>
           {{-- .form --}}
@@ -105,18 +108,19 @@
         </div>
         <div class="modal-body">
           {{-- form --}}
-            
             <form id="formEdit">
               <input type="hidden" id="id">
               <div class="form-grub">
                 <label for="editsks">SKS</label>
                 <input type="text" id="editSks" name="sks" class="form-control" placeholder="SKS">
-                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-title"></div>
               </div>
               <div class="form-grub">
                 <label for="editNim">NIM</label>
                 <input type="text" id="editMatkul" name="matkul" class="form-control" placeholder="Mata Kuliah">
-                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nim"></div>
+              </div>
+              <div class="form-grup">
+                <label for="editBobot">Bobot SKS</label>
+                <input type="text" name="bobot" id="editBobot" class="form-control" placeholder="Bobot SKS">
               </div>
             </form>
           {{-- .form --}}
@@ -164,6 +168,7 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
     $(document).ready(function() {
         var sks = $("#tabel-sks").DataTable({
             "paging": true,
@@ -180,10 +185,11 @@
               "columns": [
                   { "data": "sks" },
                   { "data": "nm_matkul" },
+                  { "data": "bobot" },
                   { "data": "action" },                   
               ],
               "columnDefs": [
-                { className: "text-center", "targets": [ 2 ] },
+                { className: "text-center", "targets": [ 3 ] },
               ]
         });
 
@@ -193,7 +199,10 @@
 
             let tambahsks    = $("#tambahSks").val();
             let tambahmatkul = $("#tambahMatkul").val();
+            let tambahbobot  = $("#tambahBobot").val();
             let token        = $("meta[name='csrf-token']").attr("content");
+
+            let form = "#formTambah";
 
 
             $.ajax({
@@ -203,10 +212,23 @@
                 data: {
                     "sks": tambahsks,
                     "nm_matkul": tambahmatkul,
+                    "bobot": tambahbobot,
                     "_token": token,
                 },
                 success:function(response){
-                  Swal.fire({
+                  if (response.status == false) {
+                    
+                        $(form+" .invalid-feedback").remove()
+                        $(form+" input, "+form+"  select, "+form+" textbox").removeClass("is-invalid")
+                        jQuery.each(response.data, function(i, val) {
+                            $(form + ' [name="' + i + '"]').addClass('is-invalid').after('<div class="invalid-feedback">' + val + '</div>');
+                        })
+                        Swal.fire("Gagal!", response.message,"error"); 
+                        sks.ajax.reload();
+
+                  } else {
+                    
+                    Swal.fire({
                                 type: 'success',
                                 icon: 'success',
                                 title: `${response.message}`,
@@ -217,11 +239,14 @@
                     //clear form
                     $('#tambahSks').val('');
                     $('#tambahMatkul').val('');
+                    $('#tambahBobot').val('');
 
                     //close modal
                     $('#tambahData').modal('hide');
                     // refresh page
-                    sks.draw();
+                    sks.ajax.reload();
+
+                  }
                 },
                 
 
@@ -265,6 +290,7 @@
                       $('#id').val(response.data.id);
                       $('#editSks').val(response.data.sks);
                       $('#editMatkul').val(response.data.nm_matkul);
+                      $('#editBobot').val(response.data.bobot);
                   },
             })
         })
@@ -278,7 +304,10 @@
             let id = $('#id').val();
             let editsks   = $('#editSks').val();
             let editmatkul = $('#editMatkul').val();
+            let editbobot = $('#editBobot').val();
             let token   = $("meta[name='csrf-token']").attr("content");
+
+            let formedit = "#formEdit";
             
             //ajax
             $.ajax({
@@ -290,25 +319,35 @@
                     "id": id,
                     "sks": editsks,
                     "matkul": editmatkul,
+                    "bobot": editbobot,
                     "_token": token,
                 },
                 success:function(response){
-                  swal.fire({
-                                type: 'success',
-                                icon: 'success',
-                                title: `${response.message}`,
-                                showConfirmButton: true,
-                                timer: 1500,
-                    });
 
-                    //clear form
-                    $('#editSks').val('');
-                    $('#editMatkul').val('');
+                    if (response.status == false) {
 
-                    // hide modal
-                    $('#editData').modal('hide');
-                    // refresh page
-                    sks.ajax.reload();
+                        $(formedit+" .invalid-feedback").remove()
+                        $(formedit+" input, "+formedit+"  select, "+formedit+" textbox").removeClass("is-invalid")
+                        jQuery.each(response.data, function(i, val) {
+                            $(formedit + ' [name="' + i + '"]').addClass('is-invalid').after('<div class="invalid-feedback">' + val + '</div>');
+                        })
+                        Swal.fire("Gagal!", response.message,"error"); 
+                        sks.ajax.reload();
+
+                    } else {
+                        swal.fire({
+                                    type: 'success',
+                                    icon: 'success',
+                                    title: `${response.message}`,
+                                    showConfirmButton: true,
+                                    timer: 1500,
+                        });
+
+                        // hide modal
+                        $('#editData').modal('hide');
+                        // refresh page
+                        sks.ajax.reload();
+                      }
                 },
                 
 
@@ -337,14 +376,14 @@
           });
         // end edit
 
-        // force delete
+        // soft delete
         $('body section table tbody').on('click', '.forceDelete', function() {
           let delete_id = $(this).data('id');
           let token   = $("meta[name='csrf-token']").attr("content");
 
           Swal.fire({
                   title: 'Apakah kamu yakin ?',
-                  text: 'ingin menghapus permanen data ini!',
+                  text: 'ingin menghapus data ini!',
                   icon: "warning",
                   showCancelButton: true,
                   cancelButtonText: 'TIDAK',
@@ -367,7 +406,7 @@
                                   icon: 'success',
                                   title: `${response.message}`,
                                   showConfirmButton: false,
-                                  timer: 3000,
+                                  timer: 1500,
                                 });
 
                                 // refresh web
@@ -377,7 +416,7 @@
                       };
                     })
         })  
-        // end force delete
+        // end soft delete
 
     }) // End Document //
 </script>

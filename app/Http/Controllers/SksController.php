@@ -17,15 +17,15 @@ class SksController extends Controller
 
     public function skstabel(Request $request)
     {
-        $sks = SksModel::select('id', 'sks', 'nm_matkul');
+        $sks = SksModel::select('id', 'sks', 'nm_matkul', 'bobot');
 
         return DataTables::of($sks->get())
             ->addColumn('action', function($row){
                 $button = '';  
                 
 
-                    $button .= '<button data-id="'.$row->id.'" class="btn btn-success btn-sm list-inline-item edit" type="button" data-toggle="modal" data-placement="top" data-target="#editData">Edit</button>';
-                    $button .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-sm list-inline-item btn-circle forceDelete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
+                    $button .= '<button data-id="'.$row->id.'" class="btn btn-success btn-xs list-inline-item edit" type="button" data-toggle="modal" data-placement="top" data-target="#editData">Edit</button>';
+                    $button .= '<button data-id="'.$row->id.'" class="btn btn-danger btn-xs list-inline-item btn-circle forceDelete" type="button" data-toggle="modal" data-placement="top" data-target="#hapusData">Hapus</button>';
             
                 return $button;
                 })
@@ -38,6 +38,7 @@ class SksController extends Controller
         $validation = Validator::make($request->all(), [
             'sks'       => 'required',
             'nm_matkul' => 'required',
+            'bobot'     => 'required|numeric',
         ]);
 
         if ($validation->fails()) {
@@ -52,6 +53,7 @@ class SksController extends Controller
         $data = new SksModel();
         $data->sks       = $request->sks;
         $data->nm_matkul = $request->nm_matkul;
+        $data->bobot     = $request->bobot;
 
         DB::beginTransaction();
         try {
@@ -74,7 +76,7 @@ class SksController extends Controller
 
     public function show(Request $request)
     {
-        $showsks = SksModel::select('id', 'sks', 'nm_matkul')->where('id', $request->id)->first();
+        $showsks = SksModel::select('id', 'sks', 'nm_matkul', 'bobot')->where('id', $request->id)->first();
 
         return response()->json([
             'success' => true,
@@ -88,13 +90,23 @@ class SksController extends Controller
         $validation = Validator::make($request->all(), [
             'sks' => 'required',
             'matkul' => 'required',
+            'bobot' => 'required|numeric',
         ]);
+
+        if ($validation->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data perlu diisi.',
+                'data' => $validation->messages(),
+            ]);
+        }
 
         //create post
         SksModel::where('id', $request->id)
         ->update([
         'sks' => $request->sks, 
         'nm_matkul' => $request->matkul,
+        'bobot' => $request->bobot,
         ]);
 
         //return response
@@ -106,7 +118,6 @@ class SksController extends Controller
 
     public function forcedelete(Request $request)
     {
-        // $forcedelete = SksModel::foreign('sks_id')->references('id')->on('tb_sks as t_sks')->onDelete('cascade');
         $forcedelete = SksModel::where('id', $request->id);
         $forcedelete->delete();
 
@@ -122,143 +133,157 @@ class SksController extends Controller
         ]);
     }
 
-    public function test() 
-    {
-        $siswa = [
-            (object)[
-                'siswa_id'=>1,
-                'nama'=>'siswa1',
-            ],
-            (object)[
-                'siswa_id'=>2,
-                'nama'=>'siswa2',
-            ],
-            (object)[
-                'siswa_id'=>3,
-                'nama'=>'siswa3',
-            ],
-        ];
+    // public function test() 
+    // {
+    //     $siswa = [
+    //         (object)[
+    //             'siswa_id'=>1,
+    //             'nama'=>'siswa1',
+    //         ],
+    //         (object)[
+    //             'siswa_id'=>2,
+    //             'nama'=>'siswa2',
+    //         ],
+    //         (object)[
+    //             'siswa_id'=>3,
+    //             'nama'=>'siswa3',
+    //         ],
+    //     ];
 
-        $datasiswa = [];
-        // $key = [];
+    //     $datasiswa = [];
+    //     // $key = [];
 
-        foreach ($siswa as $i => $item) {
-           $datasiswa[$item->siswa_id] = $item->nama; 
-        //    $siswa[$i]->umur = '10'; //add atau get data object
-        }
+    //     foreach ($siswa as $i => $item) {
+    //        $datasiswa[$item->siswa_id] = $item->nama; 
+    //     //    $siswa[$i]->umur = '10'; //add atau get data object
+    //     }
 
-        // dd($datasiswa);
+    //     // dd($datasiswa);
 
-        $kelas = [
-            (object)[
-                'kelas_id'=>1,
-                'nama_kelas'=>'Kelas A',
-            ],
-            (object)[
-                'kelas_id'=>2,
-                'nama_kelas'=>'Kelas B',
-            ],
-        ];
+    //     $kelas = [
+    //         (object)[
+    //             'kelas_id'=>1,
+    //             'nama_kelas'=>'Kelas A',
+    //         ],
+    //         (object)[
+    //             'kelas_id'=>2,
+    //             'nama_kelas'=>'Kelas B',
+    //         ],
+    //     ];
 
-        $datakelas = [];
+    //     $datakelas = [];
 
-        foreach ($kelas as $key => $value) {
-           $datakelas[$value->kelas_id] = $value->nama_kelas;
-        };
+    //     foreach ($kelas as $key => $value) {
+    //        $datakelas[$value->kelas_id] = $value->nama_kelas;
+    //     };
 
-        // dd($datakelas);
-
-
+    //     // dd($datakelas);
 
 
-        $kelas_siswa = [
-            (object)[
-                'kelas_id'=>1,
-                'siswa_id'=>1,
-            ],
-            (object)[
-                'kelas_id'=>1,
-                'siswa_id'=>2,
-            ],
-            (object)[
-                'kelas_id'=>2,
-                'siswa_id'=>3,
-            ],
-        ];
 
 
-        foreach ($kelas_siswa as $key => $value) {
-            // $kelas_siswa[$value->siswa_id];
+    //     $kelas_siswa = [
+    //         (object)[
+    //             'kelas_id'=>1,
+    //             'siswa_id'=>1,
+    //         ],
+    //         (object)[
+    //             'kelas_id'=>1,
+    //             'siswa_id'=>2,
+    //         ],
+    //         (object)[
+    //             'kelas_id'=>2,
+    //             'siswa_id'=>3,
+    //         ],
+    //     ];
 
-            if (isset($datakelas[$value->kelas_id])) {
-                $kelas_siswa[$key]->nama_kelas = $datakelas[$value->kelas_id];
-            };
+
+    //     foreach ($kelas_siswa as $key => $value) {
+    //         // $kelas_siswa[$value->siswa_id];
+
+    //         if (isset($datakelas[$value->kelas_id])) {
+    //             $kelas_siswa[$key]->nama_kelas = $datakelas[$value->kelas_id];
+    //         };
 
 
-            if (isset($datasiswa[$value->siswa_id])) {
-                $kelas_siswa[$key]->nama_siswa = $datasiswa[$value->siswa_id];
-            }
-        }
+    //         if (isset($datasiswa[$value->siswa_id])) {
+    //             $kelas_siswa[$key]->nama_siswa = $datasiswa[$value->siswa_id];
+    //         }
+    //     }
 
-        $kelassiswafix = [];
-        foreach ($kelas_siswa as $key => $value) {
-            $kelassiswafix[$value->siswa_id] = $value->nama_kelas;
-        }
+    //     $kelassiswafix = [];
+    //     foreach ($kelas_siswa as $key => $value) {
+    //         $kelassiswafix[$value->siswa_id] = [
+    //             "nama_siswa" => $value->nama_siswa,
+    //             "nama_kelas" => $value->nama_kelas,
+    //         ];
+    //     }
 
-        // dd($kelassiswafix);
+    //     // dd($kelassiswafix);
 
-        $nilaiSiswa = [
-            (object)[
-                'mapel'=>'Matematika',
-                'nilai'=>79,
-                'siswa_id'=>1,
-                // 'kelas_id'=>1,
-            ],
-            (object)[
-                'mapel'=>'Matematika',
-                'nilai'=>90,
-                'siswa_id'=>1,
-                // 'kelas_id'=>1,
-            ],
-            (object)[
-                'mapel'=>'Matematika',
-                'nilai'=>89,
-                'siswa_id'=>3,
-                // 'kelas_id'=>1,
-            ],
-            (object)[
-                'mapel'=>'IPA',
-                'nilai'=>76,
-                'siswa_id'=>1,
-                // 'kelas_id'=>1,
-            ],
-            (object)[
-                'mapel'=>'IPA',
-                'nilai'=>80,
-                'siswa_id'=>2,
-                // 'kelas_id'=>1,
-            ],
-            (object)[
-                'mapel'=>'IPA',
-                'nilai'=>83,
-                'siswa_id'=>2,
-                // 'kelas_id'=>1,
-            ],
-        ];
+    //     $nilaiSiswa = [
+    //         [
+    //             'mapel'=>'Matematika',
+    //             'nilai'=>79,
+    //             'siswa_id'=>1,
+    //             // 'kelas_id'=>1,
+    //         ],
+    //         [
+    //             'mapel'=>'Matematika',
+    //             'nilai'=>90,
+    //             'siswa_id'=>1,
+    //             // 'kelas_id'=>1,
+    //         ],
+    //         [
+    //             'mapel'=>'Matematika',
+    //             'nilai'=>89,
+    //             'siswa_id'=>3,
+    //             // 'kelas_id'=>1,
+    //         ],
+    //         [
+    //             'mapel'=>'IPA',
+    //             'nilai'=>76,
+    //             'siswa_id'=>1,
+    //             // 'kelas_id'=>1,
+    //         ],
+    //         [
+    //             'mapel'=>'IPA',
+    //             'nilai'=>80,
+    //             'siswa_id'=>2,
+    //             // 'kelas_id'=>1,
+    //         ],
+    //         [
+    //             'mapel'=>'IPA',
+    //             'nilai'=>83,
+    //             'siswa_id'=>2,
+    //             // 'kelas_id'=>1,
+    //         ],
+    //     ];
 
         
-        foreach ($nilaiSiswa as $key => $value) {
-            if (isset($kelassiswafix[$value->siswa_id])) {
-                $nilaiSiswa[$key]->nama = $datasiswa[$value->siswa_id];
-            }
-            if (isset($kelassiswafix[$value->siswa_id])) {
-                $nilaiSiswa[$key]->kelas = $kelassiswafix[$value->siswa_id];
-            }
+    //     foreach ($nilaiSiswa as $key => $value) {
+    //         if (isset($kelassiswafix[$value['siswa_id']])) {
+    //             // $nilaiSiswa[$key]->nama = $datasiswa[$value->siswa_id];
+    //             // $nilaiSiswa[$key]->kelas = $kelassiswafix[$value->siswa_id];
 
-        }
-
+    //             $nilaiSiswa[$key] = $nilaiSiswa[$key]+$kelassiswafix[$value['siswa_id']];
+    //         }
+    //     }
 
 
-        dd($nilaiSiswa);
+
+    //     // dd($nilaiSiswa);
+    // }
+
+    public function siswa()
+    {
+        $siswa = DB::table('siswa_kelas')
+                ->join('tabel_siswa', 'siswa_kelas.siswa_id', '=', 'tabel_siswa.siswa_id')
+                ->join('tabel_kelas', 'siswa_kelas.kelas_id', '=', 'tabel_kelas.kelas_id')
+                ->select('siswa_kelas.siswa_id', 'tabel_siswa.nama', 'tabel_kelas.nm_kelas')
+                ->get();
+        
+
+        dd($siswa);
     }
 }

@@ -336,8 +336,7 @@
                     "_token": token,
                 },
                 success:function(response){
-
-
+                  
                   if (response.status == false) {
                         $(form+" .invalid-feedback").remove()
                         $(form+" input, "+form+"  select, "+form+" textbox").removeClass("is-invalid")
